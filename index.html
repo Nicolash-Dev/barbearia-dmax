@@ -1,157 +1,613 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Barbearia D'Max | Santa Terezinha de Goiás</title>
-  <meta name="description" content="Barbearia D'Max em Santa Terezinha de Goiás. Corte, barba, produtos masculinos e agendamento online. Aceitamos Bolsa Estudo.">
-  <meta name="theme-color" content="#0a0a0a">
+  <meta name="description" content="Barbearia D'Max em Santa Terezinha de Goiás. Corte, barba, produtos, Bolsa Estudo e agendamento online pelo InBarber.">
+  <meta name="theme-color" content="#090909">
 
   <meta property="og:title" content="Barbearia D'Max | Santa Terezinha de Goiás">
-  <meta property="og:description" content="Onde a tradição encontra a precisão. Agende seu horário e conheça os produtos disponíveis na Barbearia D'Max.">
+  <meta property="og:description" content="Estilo, precisão e cuidado masculino. Agende seu horário na D'Max.">
   <meta property="og:type" content="website">
-  <meta property="og:locale" content="pt_BR">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            dmax: {
-              black: "#0a0a0a",
-              dark: "#111111",
-              card: "#151515",
-              gold: "#f59e0b",
-              goldLight: "#fbbf24"
-            }
-          },
-          fontFamily: {
-            cinzel: ["Cinzel", "serif"],
-            inter: ["Inter", "sans-serif"]
-          }
-        }
-      }
-    };
-  </script>
 
   <style>
     :root{
-      --black:#0a0a0a;
-      --dark:#111;
-      --card:#151515;
+      --bg:#090909;
+      --card:#121212;
+      --card2:#171717;
       --gold:#f59e0b;
-      --gold-light:#fbbf24;
+      --gold2:#fbbf24;
+      --text:#f7f7f7;
+      --muted:#a3a3a3;
+      --line:rgba(255,255,255,.09);
+      --green:#25d366;
+      --radius:22px;
     }
+
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+
+    html{
+      scroll-behavior:smooth;
+      background:var(--bg);
+    }
+
     body{
       margin:0;
-      overflow-x:hidden;
       background:
-        radial-gradient(circle at 10% 10%,rgba(245,158,11,.06),transparent 25%),
-        radial-gradient(circle at 90% 50%,rgba(245,158,11,.035),transparent 25%),
-        var(--black);
-      color:#f5f5f5;
+        radial-gradient(circle at 10% 0%,rgba(245,158,11,.08),transparent 26%),
+        var(--bg);
+      color:var(--text);
       font-family:"Inter",sans-serif;
+      overflow-x:hidden;
+      padding-bottom:86px;
     }
-    ::selection{background:#f59e0b;color:#0a0a0a}
-    .glass{
-      background:rgba(10,10,10,.76);
-      border:1px solid rgba(255,255,255,.08);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
+
+    a{
+      color:inherit;
+      text-decoration:none;
     }
-    .gold-gradient{
-      background:linear-gradient(135deg,#f59e0b 0%,#fbbf24 48%,#d97706 100%);
+
+    button,a{
+      -webkit-tap-highlight-color:transparent;
     }
-    .gold-text{
-      background:linear-gradient(120deg,#fbbf24,#f59e0b,#fde68a);
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
+
+    img{
+      display:block;
+      max-width:100%;
     }
-    .section-label{
-      display:inline-flex;
-      align-items:center;
-      gap:.65rem;
-      color:#f59e0b;
-      font-size:.75rem;
+
+    .container{
+      width:min(1180px,calc(100% - 32px));
+      margin:auto;
+    }
+
+    .cinzel{
+      font-family:"Cinzel",serif;
+    }
+
+    .gold{
+      color:var(--gold);
+    }
+
+    .section{
+      padding:44px 0;
+    }
+
+    .eyebrow{
+      color:var(--gold);
+      font-size:12px;
       font-weight:700;
-      letter-spacing:.24em;
+      letter-spacing:.22em;
       text-transform:uppercase;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
     }
-    .section-label:before{
+
+    .eyebrow::before{
       content:"";
       width:28px;
       height:1px;
-      background:#f59e0b;
+      background:var(--gold);
     }
-    .hero-vignette{
-      background:
-        linear-gradient(90deg,rgba(10,10,10,.97) 0%,rgba(10,10,10,.84) 35%,rgba(10,10,10,.38) 68%,rgba(10,10,10,.72) 100%),
-        linear-gradient(0deg,#0a0a0a 0%,transparent 35%,rgba(0,0,0,.22) 100%);
+
+    .title{
+      margin:0;
+      font-family:"Cinzel",serif;
+      font-size:clamp(30px,5vw,54px);
+      line-height:1.08;
     }
-    .glow-btn{
+
+    .muted{
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    .btn{
       position:relative;
-      isolation:isolate;
-      animation:glowPulse 2.6s infinite;
+      z-index:5;
+      min-height:52px;
+      border-radius:14px;
+      padding:0 21px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      font-weight:700;
+      border:1px solid transparent;
+      cursor:pointer;
+      transition:.2s ease;
     }
-    .glow-btn:before{
-      content:"";
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .btn-gold{
+      color:#080808;
+      background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 10px 30px rgba(245,158,11,.18);
+    }
+
+    .btn-dark{
+      border-color:var(--line);
+      background:rgba(15,15,15,.85);
+    }
+
+    .btn-whatsapp{
+      background:var(--green);
+      color:#07130b;
+    }
+
+    /* NAV */
+    .nav-wrap{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      z-index:100;
+      padding:12px 0;
+      pointer-events:none;
+    }
+
+    .nav{
+      pointer-events:auto;
+      min-height:62px;
+      border:1px solid var(--line);
+      background:rgba(8,8,8,.82);
+      backdrop-filter:blur(16px);
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 18px;
+    }
+
+    .brand{
+      font-family:"Cinzel",serif;
+      font-size:22px;
+      font-weight:800;
+      letter-spacing:.08em;
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:22px;
+      font-size:13px;
+      color:#d8d8d8;
+    }
+
+    .nav-links a:hover{
+      color:var(--gold);
+    }
+
+    /* HERO */
+    .hero{
+      min-height:590px;
+      display:flex;
+      align-items:center;
+      position:relative;
+      overflow:hidden;
+      padding-top:92px;
+    }
+
+    .hero-bg{
       position:absolute;
-      inset:-2px;
-      z-index:-1;
-      border-radius:inherit;
-      background:linear-gradient(135deg,rgba(251,191,36,.9),rgba(245,158,11,.35));
-      filter:blur(12px);
-      opacity:.25;
+      inset:0;
+      background:
+        linear-gradient(90deg,rgba(8,8,8,.97) 0%,rgba(8,8,8,.82) 44%,rgba(8,8,8,.45) 72%,rgba(8,8,8,.75) 100%),
+        linear-gradient(0deg,#090909 0%,transparent 35%),
+        url("https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=84&w=1800") center/cover;
+      pointer-events:none;
     }
-    @keyframes glowPulse{
-      0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.25)}
-      50%{box-shadow:0 0 0 10px rgba(245,158,11,0)}
+
+    .hero-content{
+      position:relative;
+      z-index:2;
+      max-width:760px;
+      padding:48px 0 42px;
     }
-    .service-card,.product-card{
-      border:1px solid rgba(255,255,255,.075);
-      background:linear-gradient(150deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease;
+
+    .hero h1{
+      font-family:"Cinzel",serif;
+      font-size:clamp(46px,8vw,88px);
+      line-height:.96;
+      margin:0;
+      letter-spacing:-.035em;
     }
-    .service-card:hover,.product-card:hover{
-      transform:translateY(-7px);
-      border-color:rgba(245,158,11,.38);
-      box-shadow:0 24px 65px rgba(0,0,0,.38);
+
+    .hero p{
+      max-width:650px;
+      font-size:clamp(16px,2vw,20px);
+      margin:16px 0 0;
+      color:#d4d4d4;
+      line-height:1.6;
     }
-    .product-image{
-      aspect-ratio:4/5;
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:11px;
+      margin-top:14px;
+    }
+
+    .trust-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .trust-pill{
+      display:flex;
+      align-items:center;
+      gap:7px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.35);
+      border-radius:999px;
+      padding:9px 12px;
+      font-size:12px;
+      color:#ddd;
+    }
+
+    /* QUICK SERVICES */
+    .quick-services{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+      margin-top:-28px;
+      position:relative;
+      z-index:4;
+    }
+
+    .service-mini{
+      min-height:104px;
+      padding:15px;
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .service-mini svg{
+      color:var(--gold);
+      width:22px;
+      height:22px;
+    }
+
+    .service-mini h3{
+      margin:12px 0 0;
+      font-family:"Cinzel",serif;
+      font-size:15px;
+    }
+
+    /* PRODUCTS */
+    .section-head{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:28px;
+      margin-bottom:12px;
+    }
+
+    .section-head .muted{
+      max-width:470px;
+      margin:0;
+    }
+
+    .products-scroll{
+      display:flex;
+      gap:14px;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      padding:2px 2px 14px;
+      scrollbar-width:thin;
+      scrollbar-color:#4a4a4a transparent;
+    }
+
+    .product{
+      flex:0 0 250px;
+      scroll-snap-align:start;
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:18px;
+      overflow:hidden;
+    }
+
+    .product img{
       width:100%;
+      height:235px;
       object-fit:cover;
-      transition:transform .5s ease;
+      background:#111;
     }
-    .product-card:hover .product-image{transform:scale(1.035)}
-    .mobile-menu{
-      visibility:hidden;
-      opacity:0;
-      transform:translateY(-8px);
-      transition:.25s ease;
+
+    .product-body{
+      padding:13px;
     }
-    .mobile-menu.open{
-      visibility:visible;
-      opacity:1;
-      transform:translateY(0);
+
+    .product h3{
+      margin:0;
+      font-family:"Cinzel",serif;
+      font-size:15px;
     }
-    @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        scroll-behavior:auto!important;
+
+    .product p{
+      margin:6px 0 10px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .product-link{
+      position:relative;
+      z-index:5;
+      color:var(--gold);
+      font-size:13px;
+      font-weight:700;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 0;
+    }
+
+    /* INFO / PAYMENT */
+    .info-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .info-card{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:20px;
+    }
+
+    .info-card h2{
+      margin:0 0 12px;
+      font-family:"Cinzel",serif;
+      font-size:clamp(25px,4vw,38px);
+      line-height:1.1;
+    }
+
+    .payment{
+      background:
+        radial-gradient(circle at 100% 0%,rgba(31,205,112,.14),transparent 32%),
+        var(--card);
+    }
+
+    .badge-green{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 11px;
+      border-radius:999px;
+      background:rgba(37,211,102,.1);
+      color:#71efaa;
+      border:1px solid rgba(37,211,102,.2);
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+
+    .proof-numbers{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .proof-box{
+      background:#0d0d0d;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:11px;
+    }
+
+    .proof-box strong{
+      display:block;
+      font-family:"Cinzel",serif;
+      color:var(--gold);
+      font-size:23px;
+    }
+
+    .proof-box span{
+      color:var(--muted);
+      font-size:11px;
+    }
+
+    /* LOCATION */
+    .location-card{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:var(--radius);
+      overflow:hidden;
+    }
+
+    .map{
+      min-height:250px;
+      background:#111;
+    }
+
+    .map iframe{
+      width:100%;
+      height:100%;
+      min-height:250px;
+      border:0;
+      display:block;
+    }
+
+    .location-info{
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .location-info h2{
+      font-family:"Cinzel",serif;
+      font-size:28px;
+      margin:0 0 14px;
+    }
+
+    .location-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    /* FOOTER */
+    footer{
+      padding:22px 0 18px;
+      border-top:1px solid var(--line);
+      color:#777;
+      font-size:12px;
+    }
+
+    .footer-row{
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      align-items:center;
+    }
+
+    /* FIXED CTA */
+    .mobile-cta{
+      position:fixed;
+      left:12px;
+      right:12px;
+      bottom:12px;
+      z-index:200;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(8,8,8,.92);
+      backdrop-filter:blur(18px);
+      padding:8px;
+      border-radius:18px;
+      display:none;
+      gap:8px;
+      box-shadow:0 20px 60px rgba(0,0,0,.45);
+    }
+
+    .mobile-cta .btn{
+      flex:1;
+      min-height:52px;
+      padding:0 12px;
+      font-size:13px;
+    }
+
+    @media(max-width:900px){
+      .nav-links{display:none}
+      .quick-services{
+        grid-template-columns:repeat(3,1fr);
+      }
+      .service-mini:nth-child(4),
+      .service-mini:nth-child(5){
+        grid-column:auto;
+      }
+      .info-grid,
+      .location-card{
+        grid-template-columns:1fr;
+      }
+      .map{
+        min-height:300px;
+      }
+      .map iframe{
+        min-height:300px;
+      }
+      .section-head{
+        align-items:start;
+        flex-direction:column;
+      }
+    }
+
+    @media(max-width:620px){
+      body{padding-bottom:88px}
+      .container{width:min(100% - 22px,1180px)}
+      .nav-wrap{padding:8px 0}
+      .nav{min-height:56px;border-radius:15px}
+      .nav .btn{display:none}
+      .brand{font-size:20px}
+      .hero{
+        min-height:540px;
+        padding-top:64px;
+      }
+      .hero-bg{
+        background:
+          linear-gradient(0deg,#090909 0%,rgba(9,9,9,.54) 60%,rgba(9,9,9,.55) 100%),
+          linear-gradient(90deg,rgba(9,9,9,.90),rgba(9,9,9,.3)),
+          url("https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=80&w=1100") 58% center/cover;
+      }
+      .hero-content{
+        padding:42px 0 34px;
+      }
+      .hero h1{
+        font-size:clamp(43px,14vw,64px);
+      }
+      .hero p{
+        font-size:15px;
+        max-width:95%;
+      }
+      .hero-actions .btn{
+        flex:1 1 100%;
+      }
+      .trust-row{
+        gap:7px;
+      }
+      .quick-services{
+        margin-top:-28px;
+        grid-template-columns:repeat(2,1fr);
+      }
+      .service-mini{
+        min-height:112px;
+      }
+      .service-mini:last-child{
+        grid-column:1 / -1;
+      }
+      .section{
+        padding:34px 0;
+      }
+      .product{
+        flex-basis:78vw;
+        max-width:290px;
+      }
+      .product img{
+        height:250px;
+      }
+      .info-card{
+        padding:18px;
+      }
+      .proof-numbers{
+        grid-template-columns:repeat(3,1fr);
+      }
+      .location-info{
+        padding:18px;
+      }
+      .location-info h2{
+        font-size:27px;
+      }
+      .footer-row{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+      .mobile-cta{
+        display:flex;
       }
     }
   </style>
@@ -159,561 +615,397 @@
 
 <body>
 
-<header class="fixed inset-x-0 top-0 z-50">
-  <div class="max-w-7xl mx-auto px-5 md:px-8">
-    <nav id="navInner" class="mt-4 rounded-2xl px-5 md:px-7 h-[72px] flex items-center justify-between transition-all">
-      <a href="#inicio" class="font-cinzel font-bold tracking-[.12em] text-xl md:text-2xl">
-        D'<span class="text-dmax-gold">MAX</span>
+<!-- NAV -->
+<div class="nav-wrap">
+  <div class="container">
+    <nav class="nav">
+      <a class="brand" href="#inicio" aria-label="Ir ao início">
+        D'<span class="gold">MAX</span>
       </a>
 
-      <div class="hidden lg:flex items-center gap-7 text-sm text-neutral-300">
-        <a class="hover:text-dmax-gold transition" href="#inicio">Início</a>
-        <a class="hover:text-dmax-gold transition" href="#servicos">Serviços</a>
-        <a class="hover:text-dmax-gold transition" href="#produtos">Produtos</a>
-        <a class="hover:text-dmax-gold transition" href="#pagamento">Pagamento</a>
-        <a class="hover:text-dmax-gold transition" href="#localizacao">Localização</a>
-        <a class="hover:text-dmax-gold transition" href="#contato">Contato</a>
+      <div class="nav-links">
+        <a href="#servicos">Serviços</a>
+        <a href="#produtos">Produtos</a>
+        <a href="#vantagens">D'Max</a>
+        <a href="#localizacao">Localização</a>
       </div>
 
-      <div class="flex items-center gap-3">
-        <a
-          href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="hidden sm:inline-flex min-h-12 px-5 items-center justify-center gap-2 rounded-xl gold-gradient text-black font-semibold text-sm glow-btn"
-        >
-          <i data-lucide="calendar-check" class="w-4 h-4"></i>
-          Agendar Agora
-        </a>
-
-        <button id="menuButton" aria-label="Abrir menu" class="lg:hidden min-w-12 min-h-12 rounded-xl border border-white/10 flex items-center justify-center">
-          <i data-lucide="menu"></i>
-        </button>
-      </div>
+      <a
+        class="btn btn-gold"
+        href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
+        aria-label="Agendar horário no InBarber"
+      >
+        <i data-lucide="calendar-check" width="18"></i>
+        Agendar
+      </a>
     </nav>
-
-    <div id="mobileMenu" class="mobile-menu glass mt-2 rounded-2xl p-4 lg:hidden">
-      <div class="flex flex-col">
-        <a class="mobile-link px-4 py-4 border-b border-white/5" href="#inicio">Início</a>
-        <a class="mobile-link px-4 py-4 border-b border-white/5" href="#servicos">Serviços</a>
-        <a class="mobile-link px-4 py-4 border-b border-white/5" href="#produtos">Produtos</a>
-        <a class="mobile-link px-4 py-4 border-b border-white/5" href="#pagamento">Pagamento</a>
-        <a class="mobile-link px-4 py-4 border-b border-white/5" href="#localizacao">Localização</a>
-        <a class="mobile-link px-4 py-4" href="#contato">Contato</a>
-
-        <a
-          href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="mt-3 min-h-14 rounded-xl gold-gradient text-black font-bold flex items-center justify-center gap-2"
-        >
-          <i data-lucide="calendar-check"></i>
-          Agendar pelo InBarber
-        </a>
-      </div>
-    </div>
   </div>
-</header>
+</div>
 
 <main>
 
-<section id="inicio" class="relative min-h-screen flex items-center overflow-hidden">
-  <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=85&w=2000')"></div>
-  <div class="hero-vignette absolute inset-0"></div>
+<!-- HERO -->
+<section id="inicio" class="hero">
+  <div class="hero-bg"></div>
 
-  <div class="relative z-10 max-w-7xl mx-auto px-5 md:px-8 pt-32 pb-16 w-full">
-    <div class="max-w-4xl">
-      <div class="hero-intro inline-flex items-center gap-3 mb-7 text-dmax-gold uppercase tracking-[.22em] text-xs sm:text-sm font-semibold">
-        <span class="w-9 h-px bg-dmax-gold"></span>
-        Santa Terezinha de Goiás
-      </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="eyebrow">Santa Terezinha de Goiás</div>
 
-      <h1 class="font-cinzel font-bold leading-[.98] tracking-tight" style="font-size:clamp(2.7rem,7.2vw,6.7rem)">
-        A ARTE DA<br>BARBEARIA<br><span class="gold-text">D'MAX.</span>
+      <h1>
+        A ARTE DA<br>
+        BARBEARIA<br>
+        <span class="gold">D'MAX.</span>
       </h1>
 
-      <p class="hero-copy mt-7 max-w-2xl text-neutral-300 leading-relaxed" style="font-size:clamp(1rem,2vw,1.25rem)">
-        Onde a tradição encontra a precisão. Corte, barba, cuidado masculino e produtos selecionados para completar seu estilo.
+      <p>
+        Corte, barba e cuidado masculino com personalidade.
+        Agende online e chegue no horário certo.
       </p>
 
-      <div class="hero-actions mt-9 flex flex-col sm:flex-row gap-3">
+      <div class="hero-actions">
         <a
+          class="btn btn-gold"
           href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="glow-btn min-h-[58px] px-7 rounded-xl gold-gradient text-black font-bold inline-flex items-center justify-center gap-3"
         >
-          <i data-lucide="calendar-check"></i>
+          <i data-lucide="calendar-check" width="19"></i>
           Agendar meu horário
         </a>
 
         <a
+          class="btn btn-dark"
           href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Vi%20o%20site%20e%20gostaria%20de%20falar%20com%20vocês."
-          target="_blank"
-          rel="noopener noreferrer"
-          class="min-h-[58px] px-7 rounded-xl border border-white/15 bg-black/25 backdrop-blur-md font-semibold inline-flex items-center justify-center gap-3 hover:border-dmax-gold/50 hover:text-dmax-gold transition"
         >
-          <i data-lucide="message-circle"></i>
-          Falar no WhatsApp
+          <i data-lucide="message-circle" width="19"></i>
+          WhatsApp
         </a>
       </div>
 
-      <div class="hero-proof mt-11 flex flex-wrap items-center gap-5 text-sm text-neutral-300">
-        <span class="inline-flex items-center gap-2">
-          <i data-lucide="star" class="w-4 h-4 text-dmax-gold fill-current"></i>
-          <strong class="text-white">5,0</strong> no Google
+      <div class="trust-row">
+        <span class="trust-pill">
+          <i data-lucide="star" width="15" class="gold"></i>
+          5,0 no Google
         </span>
-        <span class="hidden sm:block w-px h-6 bg-white/15"></span>
-        <span class="inline-flex items-center gap-2">
-          <i data-lucide="map-pin" class="w-4 h-4 text-dmax-gold"></i>
-          Av. Dona Dita — Centro
+
+        <span class="trust-pill">
+          <i data-lucide="map-pin" width="15" class="gold"></i>
+          Av. Dona Dita
         </span>
-        <span class="hidden sm:block w-px h-6 bg-white/15"></span>
-        <span class="inline-flex items-center gap-2 text-emerald-300">
-          <i data-lucide="credit-card" class="w-4 h-4"></i>
-          Aceitamos Bolsa Estudo
+
+        <span class="trust-pill">
+          <i data-lucide="credit-card" width="15" style="color:#71efaa"></i>
+          Bolsa Estudo
         </span>
       </div>
     </div>
   </div>
 </section>
 
-<section id="servicos" class="py-24 md:py-32">
-  <div class="max-w-7xl mx-auto px-5 md:px-8">
-    <div class="reveal max-w-3xl mb-12">
-      <span class="section-label">Serviços</span>
-      <h2 class="font-cinzel font-bold mt-5 leading-tight" style="font-size:clamp(2rem,5vw,4rem)">
-        PRECISÃO EM <span class="gold-text">CADA DETALHE.</span>
-      </h2>
-      <p class="mt-5 text-neutral-400">Do clássico ao contemporâneo, atendimento pensado para identidade, acabamento e confiança.</p>
-    </div>
+<!-- SERVIÇOS CURTOS -->
+<section id="servicos">
+  <div class="container">
+    <div class="quick-services">
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <article class="service-card reveal rounded-2xl p-7 min-h-[250px] flex flex-col">
-        <i data-lucide="scissors" class="text-dmax-gold"></i>
-        <div class="mt-auto">
-          <h3 class="font-cinzel text-2xl font-semibold">Corte Social</h3>
-          <p class="text-neutral-400 mt-3">Técnica, simetria e acabamento preciso.</p>
-        </div>
-      </article>
+      <div class="service-mini">
+        <i data-lucide="scissors"></i>
+        <h3>Corte Social</h3>
+      </div>
 
-      <article class="service-card reveal rounded-2xl p-7 min-h-[250px] flex flex-col">
-        <i data-lucide="sparkles" class="text-dmax-gold"></i>
-        <div class="mt-auto">
-          <h3 class="font-cinzel text-2xl font-semibold">Barba Terapia</h3>
-          <p class="text-neutral-400 mt-3">Modelagem, cuidado da pele e definição dos contornos.</p>
-        </div>
-      </article>
+      <div class="service-mini">
+        <i data-lucide="sparkles"></i>
+        <h3>Barba Terapia</h3>
+      </div>
 
-      <article class="service-card reveal rounded-2xl p-7 min-h-[250px] flex flex-col">
-        <i data-lucide="crown" class="text-dmax-gold"></i>
-        <div class="mt-auto">
-          <h3 class="font-cinzel text-2xl font-semibold">Combo D'Max</h3>
-          <p class="text-neutral-400 mt-3">Corte e barba em uma experiência completa.</p>
-        </div>
-      </article>
+      <div class="service-mini">
+        <i data-lucide="crown"></i>
+        <h3>Combo D'Max</h3>
+      </div>
 
-      <article class="service-card reveal rounded-2xl p-7 min-h-[250px] flex flex-col">
-        <i data-lucide="wind" class="text-dmax-gold"></i>
-        <div class="mt-auto">
-          <h3 class="font-cinzel text-2xl font-semibold">Selagem</h3>
-          <p class="text-neutral-400 mt-3">Controle de volume e alinhamento dos fios.</p>
-        </div>
-      </article>
+      <div class="service-mini">
+        <i data-lucide="wind"></i>
+        <h3>Selagem</h3>
+      </div>
 
-      <article class="service-card reveal rounded-2xl p-7 min-h-[250px] flex flex-col lg:col-span-2">
-        <i data-lucide="droplets" class="text-dmax-gold"></i>
-        <div class="mt-auto">
-          <h3 class="font-cinzel text-2xl font-semibold">Pigmentação</h3>
-          <p class="text-neutral-400 mt-3">Definição estratégica para cabelo ou barba com acabamento natural.</p>
-        </div>
-      </article>
+      <div class="service-mini">
+        <i data-lucide="droplets"></i>
+        <h3>Pigmentação</h3>
+      </div>
+
     </div>
   </div>
 </section>
 
-<section id="produtos" class="py-24 md:py-32 bg-[#0d0d0d]">
-  <div class="max-w-7xl mx-auto px-5 md:px-8">
-    <div class="reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-14">
-      <div class="max-w-3xl">
-        <span class="section-label">Produtos D'Max</span>
-        <h2 class="font-cinzel font-bold mt-5 leading-tight" style="font-size:clamp(2rem,5vw,4rem)">
-          CUIDADO QUE CONTINUA <span class="gold-text">FORA DA BARBEARIA.</span>
-        </h2>
+<!-- PRODUTOS EM CARROSSEL -->
+<section id="produtos" class="section">
+  <div class="container">
+
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Produtos D'Max</div>
+        <h2 class="title">SEU CUIDADO <span class="gold">CONTINUA.</span></h2>
       </div>
-      <p class="max-w-xl text-neutral-400 leading-relaxed">
-        Produtos e acessórios para cabelo, barba e cuidado pessoal disponíveis na barbearia. Consulte estoque e valores pelo WhatsApp.
+
+      <p class="muted">
+        Arraste para o lado para conhecer alguns produtos disponíveis.
+        Consulte estoque pelo WhatsApp.
       </p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="products-scroll" aria-label="Produtos - deslize para o lado">
 
-      <article class="product-card reveal rounded-2xl overflow-hidden">
-        <div class="overflow-hidden"><img src="assets/linha-kerafyto.png" alt="Linha Kerafyto Lenhador" class="product-image"></div>
-        <div class="p-5">
-          <h3 class="font-cinzel text-lg font-semibold">Linha Kerafyto Lenhador</h3>
-          <p class="text-sm text-neutral-400 mt-2">Cera finalizadora, loção hidratante e opções para cuidado capilar.</p>
-          <a href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20a%20disponibilidade%20dos%20produtos%20Kerafyto%20Lenhador." target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-dmax-gold font-semibold text-sm">
-            Consultar disponibilidade <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      <article class="product">
+        <img src="./assets/linha-kerafyto.png" alt="Linha Kerafyto Lenhador" loading="lazy">
+        <div class="product-body">
+          <h3>Linha Kerafyto</h3>
+          <p>Cera, hidratação e cuidado masculino.</p>
+          <a class="product-link" href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20a%20linha%20Kerafyto.">
+            Consultar <i data-lucide="arrow-up-right" width="15"></i>
           </a>
         </div>
       </article>
 
-      <article class="product-card reveal rounded-2xl overflow-hidden">
-        <div class="overflow-hidden"><img src="assets/aparador-nariz-ouvidos.png" alt="Aparador para nariz e ouvidos" class="product-image"></div>
-        <div class="p-5">
-          <h3 class="font-cinzel text-lg font-semibold">Aparador Pessoal</h3>
-          <p class="text-sm text-neutral-400 mt-2">Acessório para nariz, ouvidos e pequenos acabamentos.</p>
-          <a href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20o%20aparador%20pessoal." target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-dmax-gold font-semibold text-sm">
-            Consultar disponibilidade <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      <article class="product">
+        <img src="./assets/aparador-nariz-ouvidos.png" alt="Aparador pessoal" loading="lazy">
+        <div class="product-body">
+          <h3>Aparador Pessoal</h3>
+          <p>Praticidade para pequenos acabamentos.</p>
+          <a class="product-link" href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20o%20aparador%20pessoal.">
+            Consultar <i data-lucide="arrow-up-right" width="15"></i>
           </a>
         </div>
       </article>
 
-      <article class="product-card reveal rounded-2xl overflow-hidden">
-        <div class="overflow-hidden"><img src="assets/pente-modelador.png" alt="Pente modelador para cabelo" class="product-image"></div>
-        <div class="p-5">
-          <h3 class="font-cinzel text-lg font-semibold">Pente Modelador</h3>
-          <p class="text-sm text-neutral-400 mt-2">Praticidade para modelar e organizar o cabelo no dia a dia.</p>
-          <a href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20o%20pente%20modelador." target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-dmax-gold font-semibold text-sm">
-            Consultar disponibilidade <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      <article class="product">
+        <img src="./assets/pente-modelador.png" alt="Pente modelador" loading="lazy">
+        <div class="product-body">
+          <h3>Pente Modelador</h3>
+          <p>Modelagem rápida para o dia a dia.</p>
+          <a class="product-link" href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20o%20pente%20modelador.">
+            Consultar <i data-lucide="arrow-up-right" width="15"></i>
           </a>
         </div>
       </article>
 
-      <article class="product-card reveal rounded-2xl overflow-hidden">
-        <div class="overflow-hidden"><img src="assets/maquina-tblade.png" alt="Máquina profissional T-Blade" class="product-image"></div>
-        <div class="p-5">
-          <h3 class="font-cinzel text-lg font-semibold">Máquina T-Blade</h3>
-          <p class="text-sm text-neutral-400 mt-2">Máquina para acabamento e corte preciso.</p>
-          <a href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20a%20máquina%20T-Blade." target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-dmax-gold font-semibold text-sm">
-            Consultar disponibilidade <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      <article class="product">
+        <img src="./assets/maquina-tblade.png" alt="Máquina T-Blade" loading="lazy">
+        <div class="product-body">
+          <h3>Máquina T-Blade</h3>
+          <p>Acabamento e corte preciso.</p>
+          <a class="product-link" href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20a%20máquina%20T-Blade.">
+            Consultar <i data-lucide="arrow-up-right" width="15"></i>
           </a>
         </div>
       </article>
 
-      <article class="product-card reveal rounded-2xl overflow-hidden">
-        <div class="overflow-hidden"><img src="assets/locao-hidratante.png" alt="Loção hidratante para barba, cabelo e bigode" class="product-image"></div>
-        <div class="p-5">
-          <h3 class="font-cinzel text-lg font-semibold">Loção Hidratante</h3>
-          <p class="text-sm text-neutral-400 mt-2">Hidratação para barba, cabelo e bigode.</p>
-          <a href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20a%20loção%20hidratante." target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-dmax-gold font-semibold text-sm">
-            Consultar disponibilidade <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      <article class="product">
+        <img src="./assets/locao-hidratante.png" alt="Loção hidratante" loading="lazy">
+        <div class="product-body">
+          <h3>Loção Hidratante</h3>
+          <p>Hidratação para barba, cabelo e bigode.</p>
+          <a class="product-link" href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20a%20loção%20hidratante.">
+            Consultar <i data-lucide="arrow-up-right" width="15"></i>
           </a>
         </div>
       </article>
 
-      <article class="product-card reveal rounded-2xl overflow-hidden">
-        <div class="overflow-hidden"><img src="assets/shampoo-anticaspa.png" alt="Shampoo Dom Pelo Anticaspa" class="product-image"></div>
-        <div class="p-5">
-          <h3 class="font-cinzel text-lg font-semibold">Shampoo Anticaspa</h3>
-          <p class="text-sm text-neutral-400 mt-2">Linha Dom Pelo para limpeza e cuidado diário.</p>
-          <a href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20o%20Shampoo%20Dom%20Pelo%20Anticaspa." target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-dmax-gold font-semibold text-sm">
-            Consultar disponibilidade <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      <article class="product">
+        <img src="./assets/shampoo-anticaspa.png" alt="Shampoo anticaspa" loading="lazy">
+        <div class="product-body">
+          <h3>Shampoo Anticaspa</h3>
+          <p>Cuidado diário da linha Dom Pelo.</p>
+          <a class="product-link" href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20o%20shampoo%20anticaspa.">
+            Consultar <i data-lucide="arrow-up-right" width="15"></i>
           </a>
         </div>
       </article>
 
-      <article class="product-card reveal rounded-2xl overflow-hidden">
-        <div class="overflow-hidden"><img src="assets/tonico-capilar.png" alt="Tônico capilar Bravenza Essence" class="product-image"></div>
-        <div class="p-5">
-          <h3 class="font-cinzel text-lg font-semibold">Tônico Capilar</h3>
-          <p class="text-sm text-neutral-400 mt-2">Cuidado diário para couro cabeludo e fios.</p>
-          <a href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20o%20tônico%20capilar." target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-dmax-gold font-semibold text-sm">
-            Consultar disponibilidade <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      <article class="product">
+        <img src="./assets/tonico-capilar.png" alt="Tônico capilar" loading="lazy">
+        <div class="product-body">
+          <h3>Tônico Capilar</h3>
+          <p>Cuidado diário para couro cabeludo e fios.</p>
+          <a class="product-link" href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20o%20tônico%20capilar.">
+            Consultar <i data-lucide="arrow-up-right" width="15"></i>
           </a>
         </div>
       </article>
 
-      <article class="product-card reveal rounded-2xl overflow-hidden">
-        <div class="overflow-hidden"><img src="assets/shampoo-minoxidil.png" alt="Shampoo Dom Pelo com Minoxidil" class="product-image"></div>
-        <div class="p-5">
-          <h3 class="font-cinzel text-lg font-semibold">Shampoo com Minoxidil</h3>
-          <p class="text-sm text-neutral-400 mt-2">Produto da linha Dom Pelo mostrado na D'Max.</p>
-          <a href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20o%20Shampoo%20Dom%20Pelo%20com%20Minoxidil." target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-dmax-gold font-semibold text-sm">
-            Consultar disponibilidade <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      <article class="product">
+        <img src="./assets/shampoo-minoxidil.png" alt="Shampoo com Minoxidil" loading="lazy">
+        <div class="product-body">
+          <h3>Shampoo com Minoxidil</h3>
+          <p>Produto da linha Dom Pelo.</p>
+          <a class="product-link" href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Quero%20consultar%20o%20shampoo%20com%20Minoxidil.">
+            Consultar <i data-lucide="arrow-up-right" width="15"></i>
           </a>
         </div>
       </article>
 
     </div>
-
-    <p class="mt-7 text-xs text-neutral-500">
-      A disponibilidade, composição, indicação de uso e valores podem variar. Consulte a Barbearia D'Max antes da compra.
-    </p>
   </div>
 </section>
 
-<section id="pagamento" class="py-24 md:py-32">
-  <div class="max-w-7xl mx-auto px-5 md:px-8">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <div class="reveal">
-        <span class="section-label">Facilidade no pagamento</span>
-        <h2 class="font-cinzel font-bold mt-5 leading-tight" style="font-size:clamp(2rem,5vw,4rem)">
-          A D'MAX ACEITA <span class="gold-text">BOLSA ESTUDO.</span>
-        </h2>
-        <p class="mt-6 text-neutral-400 text-lg leading-relaxed">
-          Mais uma opção para facilitar seu atendimento. Consulte diretamente com a barbearia as condições de uso e os serviços elegíveis.
+<!-- DIFERENCIAIS + PAGAMENTO -->
+<section id="vantagens" class="section" style="padding-top:0">
+  <div class="container">
+
+    <div class="info-grid">
+
+      <article class="info-card">
+        <div class="eyebrow">Reputação</div>
+        <h2>QUEM CONHECE, <span class="gold">RECOMENDA.</span></h2>
+        <p class="muted">
+          Atendimento, cuidado e experiência no centro de Santa Terezinha de Goiás.
         </p>
 
-        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+        <div class="proof-numbers">
+          <div class="proof-box">
+            <strong>5.0</strong>
+            <span>Google</span>
+          </div>
+
+          <div class="proof-box">
+            <strong>11+</strong>
+            <span>Avaliações</span>
+          </div>
+
+          <div class="proof-box">
+            <strong>D'MAX</strong>
+            <span>Experiência</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="info-card payment">
+        <div class="badge-green">
+          <i data-lucide="credit-card" width="16"></i>
+          Forma de pagamento
+        </div>
+
+        <h2>ACEITAMOS <span class="gold">BOLSA ESTUDO.</span></h2>
+
+        <p class="muted">
+          Consulte com a barbearia as condições de uso e os serviços elegíveis.
+        </p>
+
+        <div class="hero-actions" style="margin-top:20px">
           <a
+            class="btn btn-gold"
             href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="min-h-14 px-7 rounded-xl gold-gradient text-black font-bold inline-flex items-center justify-center gap-2"
           >
-            <i data-lucide="calendar-check"></i>
-            Agendar horário
+            <i data-lucide="calendar-check" width="18"></i>
+            Agendar
           </a>
 
           <a
+            class="btn btn-dark"
             href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Gostaria%20de%20saber%20como%20funciona%20o%20pagamento%20com%20Bolsa%20Estudo."
-            target="_blank"
-            rel="noopener noreferrer"
-            class="min-h-14 px-7 rounded-xl border border-white/15 inline-flex items-center justify-center gap-2 hover:border-dmax-gold/50 hover:text-dmax-gold transition"
           >
-            <i data-lucide="message-circle"></i>
+            <i data-lucide="message-circle" width="18"></i>
             Tirar dúvida
           </a>
         </div>
-      </div>
+      </article>
 
-      <div class="reveal">
-        <div class="rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-[#111]">
-          <img src="assets/bolsa-estudo.png" alt="Barbearia D'Max aceita Cartão Bolsa Estudo" class="w-full h-auto">
-        </div>
-      </div>
     </div>
+
   </div>
 </section>
 
+<!-- LOCALIZAÇÃO -->
+<section id="localizacao" class="section" style="padding-top:0">
+  <div class="container">
 
-<section id="localizacao" class="py-24 md:py-32 bg-[#0d0d0d]">
-  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="location-card">
 
-    <div class="reveal text-center max-w-3xl mx-auto mb-12">
-      <span class="section-label">Localização</span>
-
-      <h2
-        class="font-cinzel font-bold mt-5 leading-tight"
-        style="font-size:clamp(2rem,5vw,4rem)"
-      >
-        ENCONTRE A <span class="gold-text">D'MAX.</span>
-      </h2>
-
-      <p class="mt-5 text-neutral-400 leading-relaxed">
-        Av. Dona Dita, Centro — Santa Terezinha de Goiás - GO, 76500-000.
-      </p>
-    </div>
-
-    <div class="reveal grid lg:grid-cols-[1.4fr_.6fr] gap-6 items-stretch">
-
-      <div class="rounded-3xl overflow-hidden border border-white/10 shadow-2xl min-h-[430px]">
+      <div class="map">
         <iframe
-          title="Localização da Barbearia D'Max no Google Maps"
-          src="https://www.google.com/maps?q=-14.4360929,-49.7103654&z=18&output=embed"
-          width="100%"
-          height="100%"
-          style="border:0;min-height:430px;"
-          allowfullscreen=""
+          title="Localização da Barbearia D'Max"
+          src="https://www.google.com/maps?q=Barbearia%20D%27Max%20Santa%20Terezinha%20de%20Goi%C3%A1s&output=embed"
           loading="lazy"
+          allowfullscreen
           referrerpolicy="no-referrer-when-downgrade"
         ></iframe>
       </div>
 
-      <div class="rounded-3xl border border-white/10 bg-[#111] p-7 md:p-8 flex flex-col justify-between">
+      <div class="location-info">
+        <div class="eyebrow">Localização</div>
 
-        <div>
-          <div class="w-12 h-12 rounded-xl bg-dmax-gold/10 border border-dmax-gold/20 flex items-center justify-center text-dmax-gold">
-            <i data-lucide="map-pin"></i>
-          </div>
+        <h2>VENHA PARA A <span class="gold">D'MAX.</span></h2>
 
-          <h3 class="font-cinzel text-2xl font-semibold mt-6">
-            Barbearia D'Max
-          </h3>
+        <p class="muted">
+          Av. Dona Dita, Centro<br>
+          Santa Terezinha de Goiás - GO<br>
+          CEP 76500-000
+        </p>
 
-          <p class="text-neutral-400 mt-4 leading-relaxed">
-            Av. Dona Dita<br>
-            Centro<br>
-            Santa Terezinha de Goiás - GO<br>
-            CEP 76500-000
-          </p>
+        <p class="muted" style="margin:5px 0 0">
+          Segunda a sábado • 09:00 às 20:00
+        </p>
 
-          <div class="mt-6 space-y-3 text-sm text-neutral-300">
-            <p class="flex items-center gap-2">
-              <i data-lucide="clock-3" class="w-4 h-4 text-dmax-gold"></i>
-              Segunda a sábado • 09:00 às 20:00
-            </p>
-
-            <p class="flex items-center gap-2">
-              <i data-lucide="phone" class="w-4 h-4 text-dmax-gold"></i>
-              (62) 98279-7204
-            </p>
-          </div>
-        </div>
-
-        <div class="mt-8 flex flex-col gap-3">
+        <div class="location-actions">
           <a
+            class="btn btn-gold"
             href="https://maps.app.goo.gl/qY2VbpvxPpC7A53y9"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="min-h-14 px-6 rounded-xl gold-gradient text-black font-bold inline-flex items-center justify-center gap-3"
           >
-            <i data-lucide="navigation"></i>
-            Abrir rota no Google Maps
+            <i data-lucide="navigation" width="18"></i>
+            Como chegar
           </a>
 
           <a
-            href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="min-h-14 px-6 rounded-xl border border-white/15 font-semibold inline-flex items-center justify-center gap-3 hover:border-dmax-gold/50 hover:text-dmax-gold transition"
+            class="btn btn-dark"
+            href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Gostaria%20de%20mais%20informações."
           >
-            <i data-lucide="calendar-check"></i>
-            Agendar antes de ir
+            <i data-lucide="message-circle" width="18"></i>
+            WhatsApp
           </a>
         </div>
-
       </div>
 
     </div>
 
-  </div>
-</section>
-
-
-<section class="pb-24 md:pb-32">
-  <div class="max-w-7xl mx-auto px-5 md:px-8">
-    <div class="reveal relative overflow-hidden rounded-3xl border border-dmax-gold/20 bg-[#111] p-8 md:p-14 lg:p-16">
-      <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_80%_30%,#f59e0b,transparent_35%)]"></div>
-      <div class="relative grid lg:grid-cols-[1fr_auto] gap-10 items-center">
-        <div class="max-w-3xl">
-          <span class="section-label">Seu próximo corte</span>
-          <h2 class="font-cinzel font-bold mt-5 leading-tight" style="font-size:clamp(2rem,5vw,4rem)">
-            SEU ESTILO MERECE <span class="gold-text">PRECISÃO.</span>
-          </h2>
-          <p class="mt-5 text-neutral-400 text-lg">Escolha o serviço, profissional e horário disponível diretamente pelo InBarber.</p>
-        </div>
-
-        <a
-          href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="glow-btn min-h-[64px] px-8 rounded-xl gold-gradient text-black font-bold flex items-center justify-center gap-3 whitespace-nowrap"
-        >
-          <i data-lucide="calendar-check"></i>
-          Agendar agora
-        </a>
-      </div>
-    </div>
   </div>
 </section>
 
 </main>
 
-<footer id="contato" class="border-t border-white/10 bg-[#070707]">
-  <div class="max-w-7xl mx-auto px-5 md:px-8 py-16">
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
-
-      <div>
-        <div class="font-cinzel font-bold tracking-[.12em] text-2xl">
-          D'<span class="text-dmax-gold">MAX</span>
-        </div>
-        <p class="mt-5 text-neutral-500 text-sm">Tradição, técnica e personalidade em Santa Terezinha de Goiás.</p>
-      </div>
-
-      <div>
-        <h3 class="font-semibold mb-4">Localização</h3>
-        <p class="text-sm text-neutral-400">Av. Dona Dita<br>Centro<br>Santa Terezinha de Goiás — GO</p>
-      </div>
-
-      <div>
-        <h3 class="font-semibold mb-4">Horários</h3>
-        <p class="text-sm text-neutral-400">Segunda a sábado<br><span class="text-white">09:00 — 20:00</span></p>
-      </div>
-
-      <div>
-        <h3 class="font-semibold mb-4">Contato</h3>
-        <a href="https://wa.me/5562982797204" target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-dmax-gold transition flex items-center gap-2">
-          <i data-lucide="message-circle" class="w-4 h-4"></i>
-          (62) 98279-7204
-        </a>
-        <p class="mt-3 text-sm text-emerald-300 flex items-center gap-2">
-          <i data-lucide="credit-card" class="w-4 h-4"></i>
-          Aceitamos Bolsa Estudo
-        </p>
-      </div>
-
+<footer>
+  <div class="container footer-row">
+    <div>
+      <strong class="cinzel" style="color:#eee">D'<span class="gold">MAX</span></strong>
+      · Santa Terezinha de Goiás
     </div>
 
-    <div class="mt-12 pt-6 border-t border-white/10 text-xs text-neutral-600 flex flex-col sm:flex-row gap-3 justify-between">
-      <p>© <span id="year"></span> Barbearia D'Max. Todos os direitos reservados.</p>
-      <p>Santa Terezinha de Goiás • GO</p>
+    <div>
+      © <span id="year"></span> Barbearia D'Max
     </div>
   </div>
 </footer>
 
-<a
-  href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Vi%20o%20site%20e%20gostaria%20de%20falar%20com%20vocês."
-  target="_blank"
-  rel="noopener noreferrer"
-  aria-label="Falar no WhatsApp"
-  class="fixed z-40 bottom-5 right-5 md:bottom-7 md:right-7 w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#25D366] text-white shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
->
-  <i data-lucide="message-circle" class="w-7 h-7"></i>
-</a>
+<!-- CTA FIXO NO CELULAR -->
+<div class="mobile-cta">
+  <a
+    class="btn btn-whatsapp"
+    href="https://wa.me/5562982797204?text=Olá%20D'Max!%20Vi%20o%20site%20e%20gostaria%20de%20falar%20com%20vocês."
+  >
+    <i data-lucide="message-circle" width="18"></i>
+    WhatsApp
+  </a>
+
+  <a
+    class="btn btn-gold"
+    href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
+  >
+    <i data-lucide="calendar-check" width="18"></i>
+    Agendar agora
+  </a>
+</div>
 
 <script>
-  lucide.createIcons();
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  const navbar = document.getElementById("navInner");
-  const menuButton = document.getElementById("menuButton");
-  const mobileMenu = document.getElementById("mobileMenu");
-
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 40) navbar.classList.add("glass", "shadow-2xl");
-    else navbar.classList.remove("glass", "shadow-2xl");
-  });
-
-  menuButton.addEventListener("click", () => {
-    const opened = mobileMenu.classList.toggle("open");
-    menuButton.innerHTML = opened ? '<i data-lucide="x"></i>' : '<i data-lucide="menu"></i>';
+  if (window.lucide) {
     lucide.createIcons();
-  });
-
-  document.querySelectorAll(".mobile-link").forEach(link => {
-    link.addEventListener("click", () => {
-      mobileMenu.classList.remove("open");
-      menuButton.innerHTML = '<i data-lucide="menu"></i>';
-      lucide.createIcons();
-    });
-  });
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    gsap.timeline({defaults:{ease:"power3.out"}})
-      .from(".hero-intro",{opacity:0,y:20,duration:.7})
-      .from("h1",{opacity:0,y:45,duration:1},"-=.35")
-      .from(".hero-copy",{opacity:0,y:25,duration:.7},"-=.45")
-      .from(".hero-actions",{opacity:0,y:25,duration:.7},"-=.45")
-      .from(".hero-proof",{opacity:0,y:20,duration:.7},"-=.4");
-
-    document.querySelectorAll(".reveal").forEach(el => {
-      gsap.from(el,{
-        opacity:0,
-        y:45,
-        duration:.9,
-        ease:"power3.out",
-        scrollTrigger:{
-          trigger:el,
-          start:"top 88%",
-          once:true
-        }
-      });
-    });
   }
 </script>
 
