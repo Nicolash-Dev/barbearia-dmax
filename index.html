@@ -1158,50 +1158,50 @@
 
     if (selectedBarber === "Primeiro disponível") {
       message =
-        "Olá, D'Max! Gostaria de agendar um horário com o primeiro barbeiro disponível entre Max, Romeu e Vitor.";
+        "Olá! Gostaria de agendar um horário na D'Max com o primeiro barbeiro disponível entre Max, Romeu e Vitor.";
 
       if (selectedService) {
         message +=
-          "\\n\\nServiço: " +
+          "\n\nServiço: " +
           selectedService +
-          "\\nValor: " +
+          "\nValor: " +
           selectedPrice +
-          "\\nDuração: " +
+          "\nDuração: " +
           selectedDuration;
       }
 
-      message += "\\n\\nQual é o primeiro horário livre?";
+      message += "\n\nQual é o primeiro horário livre?";
     } else if (selectedBarber) {
       message =
-        "Olá, D'Max! Gostaria de agendar um horário." +
-        "\\n\\nBarbeiro: " +
+        "Olá! Gostaria de agendar um horário na D'Max." +
+        "\n\nBarbeiro: " +
         selectedBarber;
 
       if (selectedService) {
         message +=
-          "\\nServiço: " +
+          "\nServiço: " +
           selectedService +
-          "\\nValor: " +
+          "\nValor: " +
           selectedPrice +
-          "\\nDuração: " +
+          "\nDuração: " +
           selectedDuration;
       }
 
-      message += "\\n\\nQuais horários estão disponíveis?";
+      message += "\n\nPoderia me informar os horários disponíveis?";
     } else {
-      message = "Olá, D'Max! Gostaria de agendar um horário.";
+      message = "Olá! Gostaria de agendar um horário na D'Max.";
 
       if (selectedService) {
         message +=
-          "\\n\\nServiço: " +
+          "\n\nServiço: " +
           selectedService +
-          "\\nValor: " +
+          "\nValor: " +
           selectedPrice +
-          "\\nDuração: " +
+          "\nDuração: " +
           selectedDuration;
       }
 
-      message += "\\n\\nQuais horários estão disponíveis?";
+      message += "\n\nPoderia me informar os horários disponíveis?";
     }
 
     bookingWhatsapp.href =
