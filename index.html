@@ -430,6 +430,38 @@
       font-size:11px;
     }
 
+
+    /* SMART BOOKING */
+    .booking-shell{border:1px solid var(--line);background:radial-gradient(circle at 100% 0%,rgba(245,158,11,.10),transparent 30%),var(--card);border-radius:var(--radius);padding:24px;overflow:hidden}
+    .booking-head{display:flex;align-items:end;justify-content:space-between;gap:22px;margin-bottom:20px}
+    .booking-head .muted{max-width:520px;margin:0}
+    .booking-step{margin-top:20px}
+    .booking-step-label{display:flex;align-items:center;gap:10px;font-size:12px;text-transform:uppercase;letter-spacing:.16em;font-weight:800;color:#d6d6d6;margin-bottom:12px}
+    .step-number{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#090909;background:var(--gold);font-size:12px;letter-spacing:0;flex:0 0 auto}
+    .barber-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .barber-card,.service-choice{appearance:none;-webkit-appearance:none;width:100%;color:var(--text);border:1px solid var(--line);background:#0e0e0e;border-radius:16px;cursor:pointer;text-align:left;transition:.2s ease}
+    .barber-card{min-height:136px;padding:16px;display:flex;flex-direction:column;justify-content:space-between}
+    .barber-card:hover,.service-choice:hover{border-color:rgba(245,158,11,.45);transform:translateY(-2px)}
+    .barber-card.selected,.service-choice.selected{border-color:var(--gold);background:linear-gradient(180deg,rgba(245,158,11,.10),rgba(245,158,11,.03)),#0e0e0e;box-shadow:0 0 0 1px rgba(245,158,11,.18) inset}
+    .barber-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Cinzel",serif;font-weight:800;background:#191919;color:var(--gold);border:1px solid rgba(245,158,11,.24)}
+    .barber-card strong{font-family:"Cinzel",serif;font-size:15px;display:block;margin-top:14px}
+    .barber-card span{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:4px}
+    .barber-card.fast .barber-avatar{border-radius:13px;color:#71efaa;border-color:rgba(37,211,102,.24)}
+    .barber-card.fast.selected{border-color:#71efaa;background:linear-gradient(180deg,rgba(37,211,102,.08),rgba(37,211,102,.02)),#0e0e0e}
+    .service-choice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .service-choice{min-height:86px;padding:13px}
+    .service-choice strong{display:block;font-size:13px}
+    .service-choice span{color:var(--muted);font-size:11px;display:block;margin-top:5px}
+    .booking-summary{margin-top:18px;border:1px solid var(--line);background:#0b0b0b;border-radius:16px;padding:16px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+    .booking-summary-title{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
+    .booking-summary-value{margin-top:5px;font-weight:700;line-height:1.5}
+    .booking-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+    .booking-note{margin-top:11px;color:#777;font-size:11px;line-height:1.55}
+    .booking-status{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:#0b0b0b;color:#aaa;font-size:11px;margin-top:10px}
+    .status-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px rgba(245,158,11,.45)}
+    @media(max-width:900px){.barber-grid{grid-template-columns:repeat(2,1fr)}.service-choice-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:620px){.booking-shell{padding:18px}.booking-head{align-items:start;flex-direction:column;margin-bottom:14px}.barber-card{min-height:124px;padding:14px}.service-choice-grid{grid-template-columns:repeat(2,1fr)}.booking-summary{grid-template-columns:1fr}.booking-actions{justify-content:stretch}.booking-actions .btn{flex:1 1 100%}}
+
     /* LOCATION */
     .location-card{
       display:grid;
@@ -624,7 +656,6 @@
       </a>
 
       <div class="nav-links">
-        <a href="#servicos">Serviços</a>
         <a href="#produtos">Produtos</a>
         <a href="#vantagens">D'Max</a>
         <a href="#localizacao">Localização</a>
@@ -632,7 +663,7 @@
 
       <a
         class="btn btn-gold"
-        href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
+        href="#agendamento"
         aria-label="Agendar horário no InBarber"
       >
         <i data-lucide="calendar-check" width="18"></i>
@@ -666,7 +697,7 @@
       <div class="hero-actions">
         <a
           class="btn btn-gold"
-          href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
+          href="#agendamento"
         >
           <i data-lucide="calendar-check" width="19"></i>
           Agendar meu horário
@@ -700,37 +731,97 @@
     </div>
   </div>
 </section>
-
-<!-- SERVIÇOS CURTOS -->
-<section id="servicos">
+<!-- AGENDAMENTO INTELIGENTE -->
+<section id="agendamento" class="section">
   <div class="container">
-    <div class="quick-services">
-
-      <div class="service-mini">
-        <i data-lucide="scissors"></i>
-        <h3>Corte Social</h3>
+    <div class="booking-shell">
+      <div class="booking-head">
+        <div>
+          <div class="eyebrow">Agendamento inteligente</div>
+          <h2 class="title">ESCOLHA QUEM VAI CUIDAR DO <span class="gold">SEU ESTILO.</span></h2>
+        </div>
+        <div>
+          <p class="muted">Selecione o barbeiro e o serviço. A disponibilidade real é confirmada no InBarber ou pelo WhatsApp da D'Max.</p>
+          <div class="booking-status"><span class="status-dot"></span>Agenda oficial continua no InBarber</div>
+        </div>
       </div>
 
-      <div class="service-mini">
-        <i data-lucide="sparkles"></i>
-        <h3>Barba Terapia</h3>
+      <div class="booking-step">
+        <div class="booking-step-label"><span class="step-number">1</span>Escolha o barbeiro</div>
+        <div class="barber-grid">
+          <button type="button" class="barber-card" data-barber="Max"><div class="barber-avatar">M</div><div><strong>Max</strong><span>Agendar atendimento com Max.</span></div></button>
+          <button type="button" class="barber-card" data-barber="Romeu"><div class="barber-avatar">R</div><div><strong>Romeu</strong><span>Agendar atendimento com Romeu.</span></div></button>
+          <button type="button" class="barber-card" data-barber="Vitor"><div class="barber-avatar">V</div><div><strong>Vitor</strong><span>Agendar atendimento com Vitor.</span></div></button>
+          <button type="button" class="barber-card fast" data-barber="Primeiro disponível"><div class="barber-avatar"><i data-lucide="zap" width="19"></i></div><div><strong>Primeiro disponível</strong><span>Para quem quer o horário mais rápido entre os três.</span></div></button>
+        </div>
       </div>
 
-      <div class="service-mini">
-        <i data-lucide="crown"></i>
-        <h3>Combo D'Max</h3>
+      <div class="booking-step">
+        <div class="booking-step-label"><span class="step-number">2</span>Escolha o serviço</div>
+        
+        <div class="service-choice-grid">
+          <button type="button" class="service-choice" data-service="Luzes Platinada" data-price="R$ 109,99" data-duration="30 min">
+            <strong>Luzes Platinada</strong><span>R$ 109,99 • 30 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Corte/Luzes" data-price="R$ 120,00" data-duration="30 min">
+            <strong>Corte/Luzes</strong><span>R$ 120,00 • 30 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Corte/Depilação Orelha e Nasal" data-price="R$ 79,99" data-duration="30 min">
+            <strong>Corte/Depilação Orelha e Nasal</strong><span>R$ 79,99 • 30 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Alisamento Masculino" data-price="R$ 79,99" data-duration="30 min">
+            <strong>Alisamento Masculino</strong><span>R$ 79,99 • 30 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Corte Masculino" data-price="R$ 39,99" data-duration="30 min">
+            <strong>Corte Masculino</strong><span>R$ 39,99 • 30 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Corte Kids" data-price="R$ 39,99" data-duration="30 min">
+            <strong>Corte Kids</strong><span>R$ 39,99 • 30 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Corte/Barba" data-price="R$ 70,00" data-duration="30 min">
+            <strong>Corte/Barba</strong><span>R$ 70,00 • 30 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Barba e Pezinho" data-price="R$ 34,99" data-duration="15 min">
+            <strong>Barba e Pezinho</strong><span>R$ 34,99 • 15 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Corte c/ Pigmentação" data-price="R$ 74,99" data-duration="30 min">
+            <strong>Corte c/ Pigmentação</strong><span>R$ 74,99 • 30 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Barba c/ Pigmentação" data-price="R$ 49,99" data-duration="30 min">
+            <strong>Barba c/ Pigmentação</strong><span>R$ 49,99 • 30 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Pezinho e Sobrancelha" data-price="R$ 24,99" data-duration="5 min">
+            <strong>Pezinho e Sobrancelha</strong><span>R$ 24,99 • 5 min</span>
+          </button>
+
+          <button type="button" class="service-choice" data-service="Platinado Nevou ❄️" data-price="R$ 149,99" data-duration="30 min">
+            <strong>Platinado Nevou ❄️</strong><span>R$ 149,99 • 30 min</span>
+          </button>
+        </div>
       </div>
 
-      <div class="service-mini">
-        <i data-lucide="wind"></i>
-        <h3>Selagem</h3>
-      </div>
+      <div class="booking-summary">
 
-      <div class="service-mini">
-        <i data-lucide="droplets"></i>
-        <h3>Pigmentação</h3>
+        <div>
+          <div class="booking-summary-title">Seu agendamento</div>
+          <div id="bookingSummary" class="booking-summary-value">Escolha um barbeiro e um serviço para continuar.</div>
+          <div class="booking-note">O site não exibe vagas falsas: os horários livres continuam sendo validados pela agenda oficial da barbearia.</div>
+        </div>
+        <div class="booking-actions">
+          <a id="bookingWhatsapp" class="btn btn-whatsapp" href="https://wa.me/5562982797204"><i data-lucide="message-circle" width="18"></i>Pedir horários</a>
+          <a class="btn btn-gold" href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"><i data-lucide="calendar-check" width="18"></i>Ver agenda no InBarber</a>
+        </div>
       </div>
-
     </div>
   </div>
 </section>
@@ -891,7 +982,7 @@
         <div class="hero-actions" style="margin-top:20px">
           <a
             class="btn btn-gold"
-            href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
+            href="#agendamento"
           >
             <i data-lucide="calendar-check" width="18"></i>
             Agendar
@@ -994,7 +1085,7 @@
 
   <a
     class="btn btn-gold"
-    href="https://chat.inbarberapp.com/?id=2c9e8faf-6b02-460b-b0c6-9598fb73f2f2"
+    href="#agendamento"
   >
     <i data-lucide="calendar-check" width="18"></i>
     Agendar agora
@@ -1004,9 +1095,143 @@
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 
+  const barberButtons = document.querySelectorAll("[data-barber]");
+  const serviceButtons = document.querySelectorAll("[data-service]");
+  const bookingSummary = document.getElementById("bookingSummary");
+  const bookingWhatsapp = document.getElementById("bookingWhatsapp");
+
+  const GENERAL_WHATSAPP = "5562982797204";
+  let selectedBarber = "";
+  let selectedService = "";
+  let selectedPrice = "";
+  let selectedDuration = "";
+
+  function getWhatsappNumber() {
+    return GENERAL_WHATSAPP;
+  }
+
+  function updateBooking() {
+    barberButtons.forEach((btn) => {
+      btn.classList.toggle(
+        "selected",
+        btn.dataset.barber === selectedBarber
+      );
+    });
+
+    serviceButtons.forEach((btn) => {
+      btn.classList.toggle(
+        "selected",
+        btn.dataset.service === selectedService
+      );
+    });
+
+    if (!selectedBarber && !selectedService) {
+      bookingSummary.textContent =
+        "Escolha um barbeiro e um serviço para continuar.";
+    } else if (!selectedBarber) {
+      bookingSummary.textContent =
+        "Serviço: " +
+        selectedService +
+        " • " +
+        selectedPrice +
+        " • " +
+        selectedDuration +
+        " • Agora escolha o barbeiro.";
+    } else if (!selectedService) {
+      bookingSummary.textContent =
+        "Barbeiro: " +
+        selectedBarber +
+        " • Agora escolha o serviço.";
+    } else {
+      bookingSummary.textContent =
+        "Barbeiro: " +
+        selectedBarber +
+        " • Serviço: " +
+        selectedService +
+        " • " +
+        selectedPrice +
+        " • " +
+        selectedDuration;
+    }
+
+    let message = "";
+
+    if (selectedBarber === "Primeiro disponível") {
+      message =
+        "Olá, D'Max! Gostaria de agendar um horário com o primeiro barbeiro disponível entre Max, Romeu e Vitor.";
+
+      if (selectedService) {
+        message +=
+          "\\n\\nServiço: " +
+          selectedService +
+          "\\nValor: " +
+          selectedPrice +
+          "\\nDuração: " +
+          selectedDuration;
+      }
+
+      message += "\\n\\nQual é o primeiro horário livre?";
+    } else if (selectedBarber) {
+      message =
+        "Olá, D'Max! Gostaria de agendar um horário." +
+        "\\n\\nBarbeiro: " +
+        selectedBarber;
+
+      if (selectedService) {
+        message +=
+          "\\nServiço: " +
+          selectedService +
+          "\\nValor: " +
+          selectedPrice +
+          "\\nDuração: " +
+          selectedDuration;
+      }
+
+      message += "\\n\\nQuais horários estão disponíveis?";
+    } else {
+      message = "Olá, D'Max! Gostaria de agendar um horário.";
+
+      if (selectedService) {
+        message +=
+          "\\n\\nServiço: " +
+          selectedService +
+          "\\nValor: " +
+          selectedPrice +
+          "\\nDuração: " +
+          selectedDuration;
+      }
+
+      message += "\\n\\nQuais horários estão disponíveis?";
+    }
+
+    bookingWhatsapp.href =
+      "https://wa.me/" +
+      getWhatsappNumber() +
+      "?text=" +
+      encodeURIComponent(message);
+  }
+
+  barberButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      selectedBarber = btn.dataset.barber;
+      updateBooking();
+    });
+  });
+
+  serviceButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      selectedService = btn.dataset.service;
+      selectedPrice = btn.dataset.price;
+      selectedDuration = btn.dataset.duration;
+      updateBooking();
+    });
+  });
+
   if (window.lucide) {
     lucide.createIcons();
   }
+
+  updateBooking();
 </script>
 
 </body>
