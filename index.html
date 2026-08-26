@@ -1204,9 +1204,9 @@
             <div><strong>Romeu</strong><span>Seg. a sex. • 13:00 às 19:00. Sáb. • 08:00 às 19:00.</span></div>
           </button>
 
-          <button type="button" class="barber-card" data-barber="Vitor">
+          <button type="button" class="barber-card" data-barber="Victor">
             <div class="barber-avatar">V</div>
-            <div><strong>Vitor</strong><span>Seg. a sáb. • 08:00 às 19:00.</span></div>
+            <div><strong>Victor</strong><span>Seg. a sáb. • 08:00 às 19:00.</span></div>
           </button>
 
           <button type="button" class="barber-card fast" data-barber="Primeiro disponível">
@@ -1900,7 +1900,7 @@
       let slots = [];
 
       if (state.selectedBarberName === "Primeiro disponível") {
-        const pros = ["Max", "Romeu", "Vitor"]
+        const pros = ["Max", "Romeu", "Victor"]
           .map(name => state.professionalsByName.get(name))
           .filter(Boolean);
 
