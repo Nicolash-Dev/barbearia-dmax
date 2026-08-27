@@ -110,6 +110,9 @@
     .login-actions{display:grid;gap:10px;margin-top:20px}
     .feedback{margin-top:14px;border-radius:13px;padding:12px 14px;font-size:12px;line-height:1.5}
     .feedback.error{color:#fecaca;border:1px solid rgba(239,68,68,.28);background:rgba(239,68,68,.07)}
+    .feedback.success{color:#bbf7d0;border:1px solid rgba(37,211,102,.25);background:rgba(37,211,102,.06)}
+    .forgot-link{border:0;background:transparent;color:var(--gold);padding:4px 0;font-size:12px;font-weight:800;text-align:left;cursor:pointer}
+    .forgot-link:hover{text-decoration:underline}
 
     .dashboard{padding:28px 0 60px}
     .dash-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:20px}
@@ -307,6 +310,7 @@
 
           <div class="login-actions">
             <button id="loginButton" class="btn btn-gold" type="submit">Entrar no painel</button>
+            <button id="forgotPasswordButton" class="forgot-link" type="button">Esqueci minha senha</button>
           </div>
 
           <div id="loginFeedback" class="feedback" hidden></div>
@@ -371,6 +375,31 @@
       </div>
     </section>
   
+
+  <div id="resetPasswordModal" class="modal-backdrop" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="resetPasswordTitle">
+      <div class="eyebrow">Recuperação de acesso</div>
+      <h3 id="resetPasswordTitle">Criar nova senha</h3>
+      <p>Digite uma nova senha para sua conta administrativa.</p>
+
+      <div class="field">
+        <label for="newPassword">Nova senha</label>
+        <input id="newPassword" class="input" type="password" autocomplete="new-password" minlength="8">
+      </div>
+
+      <div class="field">
+        <label for="confirmNewPassword">Confirmar nova senha</label>
+        <input id="confirmNewPassword" class="input" type="password" autocomplete="new-password" minlength="8">
+      </div>
+
+      <div id="resetPasswordFeedback" class="feedback" hidden></div>
+
+      <div class="modal-actions">
+        <button id="resetPasswordSave" class="btn btn-gold" type="button">Salvar nova senha</button>
+      </div>
+    </div>
+  </div>
+
   <div id="confirmModal" class="modal-backdrop" hidden>
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
       <div class="eyebrow">Confirmar ação</div>
@@ -408,6 +437,12 @@
     const loginFeedback = document.getElementById("loginFeedback");
     const logoutButton = document.getElementById("logoutButton");
     const userEmail = document.getElementById("userEmail");
+    const forgotPasswordButton = document.getElementById("forgotPasswordButton");
+    const resetPasswordModal = document.getElementById("resetPasswordModal");
+    const newPassword = document.getElementById("newPassword");
+    const confirmNewPassword = document.getElementById("confirmNewPassword");
+    const resetPasswordFeedback = document.getElementById("resetPasswordFeedback");
+    const resetPasswordSave = document.getElementById("resetPasswordSave");
 
     const agendaDate = document.getElementById("agendaDate");
     const panelDate = document.getElementById("panelDate");
@@ -545,9 +580,9 @@
       });
     }
 
-    function showLoginFeedback(message) {
+    function showLoginFeedback(message, type = "error") {
       loginFeedback.textContent = message;
-      loginFeedback.className = "feedback error";
+      loginFeedback.className = `feedback ${type}`;
       loginFeedback.hidden = false;
     }
 
@@ -769,6 +804,109 @@
       }
     });
 
+
+    forgotPasswordButton.addEventListener("click", async () => {
+      clearLoginFeedback();
+
+      const email = document.getElementById("email").value.trim();
+
+      if (!email) {
+        showLoginFeedback("Digite seu e-mail acima para receber o link de recuperação.");
+        document.getElementById("email").focus();
+        return;
+      }
+
+      forgotPasswordButton.disabled = true;
+      const originalText = forgotPasswordButton.textContent;
+      forgotPasswordButton.textContent = "Enviando...";
+
+      try {
+        const { error } = await dmaxAuth.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/admin/`
+        });
+
+        if (error) throw error;
+
+        showLoginFeedback(
+          "Se esse e-mail estiver cadastrado, você receberá um link para criar uma nova senha.",
+          "success"
+        );
+      } catch (error) {
+        console.error("D'Max Admin recuperação:", error);
+        showLoginFeedback("Não foi possível enviar a recuperação agora. Tente novamente.");
+      } finally {
+        forgotPasswordButton.disabled = false;
+        forgotPasswordButton.textContent = originalText;
+      }
+    });
+
+    function showResetPasswordModal() {
+      loginPage.hidden = true;
+      dashboardPage.hidden = true;
+      logoutButton.hidden = true;
+      resetPasswordModal.hidden = false;
+      newPassword.value = "";
+      confirmNewPassword.value = "";
+      resetPasswordFeedback.hidden = true;
+      setTimeout(() => newPassword.focus(), 50);
+    }
+
+    resetPasswordSave.addEventListener("click", async () => {
+      const password = newPassword.value;
+      const confirmation = confirmNewPassword.value;
+
+      resetPasswordFeedback.hidden = true;
+
+      if (password.length < 8) {
+        resetPasswordFeedback.textContent = "A nova senha precisa ter pelo menos 8 caracteres.";
+        resetPasswordFeedback.className = "feedback error";
+        resetPasswordFeedback.hidden = false;
+        return;
+      }
+
+      if (password !== confirmation) {
+        resetPasswordFeedback.textContent = "As duas senhas não são iguais.";
+        resetPasswordFeedback.className = "feedback error";
+        resetPasswordFeedback.hidden = false;
+        return;
+      }
+
+      resetPasswordSave.disabled = true;
+      const originalText = resetPasswordSave.textContent;
+      resetPasswordSave.textContent = "Salvando...";
+
+      try {
+        const { error } = await dmaxAuth.auth.updateUser({ password });
+
+        if (error) throw error;
+
+        resetPasswordFeedback.textContent = "Senha alterada com sucesso. Entrando no painel...";
+        resetPasswordFeedback.className = "feedback success";
+        resetPasswordFeedback.hidden = false;
+
+        history.replaceState({}, document.title, window.location.pathname);
+
+        const { data } = await dmaxAuth.auth.getSession();
+
+        setTimeout(async () => {
+          resetPasswordModal.hidden = true;
+          if (data.session) {
+            await renderLoggedIn(data.session);
+          } else {
+            renderLoggedOut();
+          }
+        }, 900);
+      } catch (error) {
+        console.error("D'Max Admin nova senha:", error);
+        resetPasswordFeedback.textContent = "Não foi possível alterar a senha. Abra novamente o link recebido por e-mail.";
+        resetPasswordFeedback.className = "feedback error";
+        resetPasswordFeedback.hidden = false;
+      } finally {
+        resetPasswordSave.disabled = false;
+        resetPasswordSave.textContent = originalText;
+      }
+    });
+
     async function initializeAuth() {
       const { data, error } = await dmaxAuth.auth.getSession();
 
@@ -837,7 +975,12 @@
 
     agendaDate.addEventListener("change", loadAgenda);
 
-    dmaxAuth.auth.onAuthStateChange((_event, session) => {
+    dmaxAuth.auth.onAuthStateChange(async (event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        showResetPasswordModal();
+        return;
+      }
+
       if (!session) {
         renderLoggedOut();
       }
