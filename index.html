@@ -1278,6 +1278,10 @@
           <h3 id="bookingSuccessTitle">Seu horário está reservado.</h3>
           <p id="bookingSuccessText"></p>
           <div class="booking-success-actions">
+            <a id="bookingManage" class="btn btn-gold" href="/meu-agendamento/" rel="noopener">
+              <i data-lucide="calendar-cog" width="18"></i>
+              Gerenciar meu agendamento
+            </a>
             <button id="newBooking" class="btn btn-dark" type="button">
               <i data-lucide="plus" width="18"></i>
               Fazer outro agendamento
@@ -1644,6 +1648,7 @@
   const bookingSuccessTitle = document.getElementById("bookingSuccessTitle");
   const bookingSuccessText = document.getElementById("bookingSuccessText");
   const bookingSuccessWhatsapp = document.getElementById("bookingSuccessWhatsapp");
+  const bookingManage = document.getElementById("bookingManage");
   const newBooking = document.getElementById("newBooking");
 
   document.getElementById("year").textContent = new Date().getFullYear();
@@ -2032,7 +2037,7 @@
     confirmBooking.innerHTML = '<span>Confirmando...</span>';
 
     try {
-      const { data, error } = await dmaxDB.rpc("criar_agendamento", {
+      const { data, error } = await dmaxDB.rpc("criar_agendamento_cliente_dmax", {
         p_profissional_id: professionalId,
         p_servico_id: state.selectedServiceId,
         p_cliente_nome: name,
@@ -2064,6 +2069,14 @@
 
       bookingSuccessWhatsapp.href =
         `https://wa.me/${GENERAL_WHATSAPP}?text=${encodeURIComponent(whatsappMessage)}`;
+
+      const managementToken = String(data || "").trim();
+      if (!managementToken) {
+        throw new Error("Token de gerenciamento não retornado.");
+      }
+
+      bookingManage.href =
+        `/meu-agendamento/?token=${encodeURIComponent(managementToken)}`;
 
       bookingSuccess.hidden = false;
       bookingSuccess.scrollIntoView({ behavior: "smooth", block: "nearest" });

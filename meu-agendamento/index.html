@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Meu Agendamento | Barbearia D'Max</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root{
+      --bg:#090909;--card:#121212;--card2:#0d0d0d;--line:rgba(255,255,255,.10);
+      --text:#f7f7f7;--muted:#9a9a9a;--gold:#f59e0b;--gold2:#fbbf24;
+      --green:#25d366;--red:#ef4444;--radius:20px
+    }
+    *{box-sizing:border-box}
+    html{color-scheme:dark}
+    body{
+      margin:0;min-height:100vh;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+      color:var(--text);background:
+      radial-gradient(circle at 90% 0%,rgba(245,158,11,.10),transparent 28%),var(--bg)
+    }
+    button,input{font:inherit} button{cursor:pointer} [hidden]{display:none!important}
+    a{text-decoration:none;color:inherit}
+    .shell{width:min(100% - 24px,760px);margin:0 auto}
+    .topbar{border-bottom:1px solid var(--line);background:rgba(8,8,8,.92)}
+    .topbar-inner{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:900}
+    .brand-mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#090909}
+    .brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+    main{padding:34px 0 60px}
+    .eyebrow{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+    h1{font-size:clamp(34px,8vw,52px);line-height:1;margin:10px 0 10px}
+    h2{margin:0 0 6px;font-size:22px}
+    .muted{color:var(--muted);line-height:1.6}
+    .card{border:1px solid var(--line);background:var(--card);border-radius:var(--radius);padding:22px;margin-top:18px}
+    .summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+    .item{border:1px solid var(--line);background:var(--card2);border-radius:15px;padding:14px}
+    .item span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+    .item strong{font-size:15px}
+    .status{display:inline-flex;padding:7px 10px;border:1px solid rgba(245,158,11,.28);border-radius:999px;color:#fde68a;background:rgba(245,158,11,.07);font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .status.cancelado{color:#fecaca;border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.06)}
+    .status.concluido{color:#bbf7d0;border-color:rgba(37,211,102,.25);background:rgba(37,211,102,.06)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .btn{min-height:48px;border-radius:13px;padding:0 17px;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;transition:.18s}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#090909}
+    .btn-dark{background:#111;border-color:var(--line);color:#eee}
+    .btn-danger{background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.24);color:#fecaca}
+    .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .date-input{width:100%;min-height:50px;border:1px solid var(--line);border-radius:13px;background:#090909;color:#eee;padding:0 13px;outline:none;color-scheme:dark;margin-top:10px}
+    .times{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}
+    .time{min-height:52px;border:1px solid var(--line);border-radius:13px;background:#0d0d0d;color:#eee;font-weight:800}
+    .time.selected{color:#090909;border-color:var(--gold);background:linear-gradient(135deg,var(--gold2),var(--gold))}
+    .feedback{margin-top:14px;padding:12px 14px;border-radius:13px;font-size:12px;line-height:1.5}
+    .feedback.error{color:#fecaca;border:1px solid rgba(239,68,68,.28);background:rgba(239,68,68,.07)}
+    .feedback.success{color:#bbf7d0;border:1px solid rgba(37,211,102,.25);background:rgba(37,211,102,.06)}
+    .placeholder{text-align:center;padding:34px 18px;color:var(--muted)}
+    .loading{min-height:260px;display:grid;place-items:center;color:var(--muted)}
+    @media(max-width:600px){
+      .summary{grid-template-columns:1fr}
+      .times{grid-template-columns:repeat(3,1fr)}
+      .actions .btn{flex:1 1 100%}
+      .card{padding:18px}
+    }
+    @media(max-width:380px){.times{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">D</div>
+        <div>D'Max<small>Meu agendamento</small></div>
+      </div>
+      <a class="btn btn-dark" href="/">Voltar ao site</a>
+    </div>
+  </header>
+
+  <main class="shell">
+    <div class="eyebrow">D'Max Booking</div>
+    <h1>Gerenciar agendamento</h1>
+    <p class="muted">Consulte seu horário, reagende para outra data ou cancele sua reserva.</p>
+
+    <div id="loading" class="card loading">Carregando seu agendamento...</div>
+
+    <section id="appointmentCard" class="card" hidden>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap">
+        <div>
+          <h2 id="customerName">Seu agendamento</h2>
+          <div id="appointmentSubtitle" class="muted"></div>
+        </div>
+        <span id="statusBadge" class="status">AGENDADO</span>
+      </div>
+
+      <div class="summary">
+        <div class="item"><span>Barbeiro</span><strong id="barber"></strong></div>
+        <div class="item"><span>Serviço</span><strong id="service"></strong></div>
+        <div class="item"><span>Data</span><strong id="dateText"></strong></div>
+        <div class="item"><span>Horário</span><strong id="timeText"></strong></div>
+      </div>
+
+      <div id="activeActions" class="actions">
+        <button id="openReschedule" class="btn btn-gold" type="button">
+          <i data-lucide="calendar-clock" width="18"></i> Reagendar
+        </button>
+        <button id="cancelBooking" class="btn btn-danger" type="button">
+          <i data-lucide="calendar-x" width="18"></i> Cancelar agendamento
+        </button>
+      </div>
+
+      <div id="mainFeedback" class="feedback" hidden></div>
+    </section>
+
+    <section id="rescheduleCard" class="card" hidden>
+      <div class="eyebrow">Novo horário</div>
+      <h2 style="margin-top:8px">Escolha outra data</h2>
+      <p class="muted">O barbeiro e o serviço serão mantidos. Mostramos somente horários realmente disponíveis.</p>
+
+      <input id="newDate" class="date-input" type="date">
+      <div id="times" class="times"></div>
+
+      <div class="actions">
+        <button id="closeReschedule" class="btn btn-dark" type="button">Voltar</button>
+        <button id="confirmReschedule" class="btn btn-gold" type="button" disabled>Confirmar novo horário</button>
+      </div>
+      <div id="rescheduleFeedback" class="feedback" hidden></div>
+    </section>
+
+    <section id="invalidCard" class="card" hidden>
+      <div class="placeholder">
+        <h2>Link inválido ou expirado.</h2>
+        <p>Confira o link recebido após o agendamento ou fale com a D'Max.</p>
+        <a class="btn btn-gold" href="/">Voltar ao site</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const SUPABASE_URL = "https://lflngxghcykxphwcahga.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_C3w7NvLUAnVO4wLP0EJofw_mo6vy7WQ";
+    const TIME_ZONE = "America/Sao_Paulo";
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}
+    });
+
+    const token = new URLSearchParams(location.search).get("token") || "";
+    let booking = null;
+    let selectedStart = "";
+
+    const loading = document.getElementById("loading");
+    const appointmentCard = document.getElementById("appointmentCard");
+    const invalidCard = document.getElementById("invalidCard");
+    const rescheduleCard = document.getElementById("rescheduleCard");
+    const customerName = document.getElementById("customerName");
+    const appointmentSubtitle = document.getElementById("appointmentSubtitle");
+    const statusBadge = document.getElementById("statusBadge");
+    const barber = document.getElementById("barber");
+    const service = document.getElementById("service");
+    const dateText = document.getElementById("dateText");
+    const timeText = document.getElementById("timeText");
+    const activeActions = document.getElementById("activeActions");
+    const mainFeedback = document.getElementById("mainFeedback");
+    const openReschedule = document.getElementById("openReschedule");
+    const cancelBooking = document.getElementById("cancelBooking");
+    const newDate = document.getElementById("newDate");
+    const times = document.getElementById("times");
+    const closeReschedule = document.getElementById("closeReschedule");
+    const confirmReschedule = document.getElementById("confirmReschedule");
+    const rescheduleFeedback = document.getElementById("rescheduleFeedback");
+
+    function formatDateTime(iso){
+      const d = new Date(iso);
+      return {
+        date: new Intl.DateTimeFormat("pt-BR", {
+          timeZone:TIME_ZONE, weekday:"long", day:"2-digit", month:"long", year:"numeric"
+        }).format(d),
+        time: new Intl.DateTimeFormat("pt-BR", {
+          timeZone:TIME_ZONE, hour:"2-digit", minute:"2-digit", hour12:false
+        }).format(d)
+      };
+    }
+
+    function todayBrazilISO(){
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone:TIME_ZONE, year:"numeric",month:"2-digit",day:"2-digit"
+      }).formatToParts(new Date());
+      const o={}; parts.forEach(p=>{if(p.type!=="literal")o[p.type]=p.value});
+      return `${o.year}-${o.month}-${o.day}`;
+    }
+
+    function addDaysISO(ymd, days){
+      const [y,m,d]=ymd.split("-").map(Number);
+      const x=new Date(Date.UTC(y,m-1,d+days,12));
+      return x.toISOString().slice(0,10);
+    }
+
+    function feedback(el,message,type="error"){
+      el.textContent=message;
+      el.className=`feedback ${type}`;
+      el.hidden=false;
+    }
+    function clearFeedback(el){el.hidden=true;el.textContent="";}
+
+    function renderBooking(){
+      const dt=formatDateTime(booking.inicio);
+      customerName.textContent=`${booking.cliente_nome}, seu horário`;
+      appointmentSubtitle.textContent=`${booking.servico} • ${booking.barbeiro}`;
+      barber.textContent=booking.barbeiro;
+      service.textContent=booking.servico;
+      dateText.textContent=dt.date;
+      timeText.textContent=dt.time;
+
+      const status=String(booking.status||"AGENDADO").toUpperCase();
+      statusBadge.textContent=status;
+      statusBadge.className="status";
+      if(status==="CANCELADO") statusBadge.classList.add("cancelado");
+      if(status==="CONCLUIDO" || status==="CONCLUÍDO") statusBadge.classList.add("concluido");
+
+      const active=status==="AGENDADO" || status==="CONFIRMADO";
+      activeActions.hidden=!active;
+      if(!active){
+        feedback(mainFeedback,
+          status==="CANCELADO"
+            ? "Este agendamento já foi cancelado."
+            : "Este atendimento não pode mais ser alterado.",
+          status==="CANCELADO" ? "error" : "success"
+        );
+      } else {
+        clearFeedback(mainFeedback);
+      }
+    }
+
+    async function loadBooking(){
+      if(!token){
+        loading.hidden=true;
+        invalidCard.hidden=false;
+        return;
+      }
+      try{
+        const {data,error}=await db.rpc("meu_agendamento_dmax_v2",{p_token:token});
+        if(error) throw error;
+        if(!data || !data.length) throw new Error("Agendamento não encontrado.");
+        booking=data[0];
+        renderBooking();
+        loading.hidden=true;
+        appointmentCard.hidden=false;
+      }catch(err){
+        console.error("Meu agendamento:",err);
+        loading.hidden=true;
+        invalidCard.hidden=false;
+      }finally{
+        if(window.lucide) lucide.createIcons();
+      }
+    }
+
+    async function loadSlots(){
+      selectedStart="";
+      confirmReschedule.disabled=true;
+      clearFeedback(rescheduleFeedback);
+
+      if(!newDate.value){
+        times.innerHTML="";
+        return;
+      }
+      times.innerHTML='<div class="muted" style="grid-column:1/-1;padding:16px">Consultando horários...</div>';
+
+      try{
+        const {data,error}=await db.rpc("listar_horarios_disponiveis",{
+          p_profissional_id:booking.profissional_id,
+          p_servico_id:booking.servico_id,
+          p_data:newDate.value
+        });
+        if(error) throw error;
+
+        const rows=data||[];
+        if(!rows.length){
+          times.innerHTML='<div class="muted" style="grid-column:1/-1;padding:16px">Nenhum horário disponível nesta data.</div>';
+          return;
+        }
+
+        times.innerHTML=rows.map((slot,i)=>{
+          const t=formatDateTime(slot.horario_inicio).time;
+          return `<button class="time" type="button" data-index="${i}">${t}</button>`;
+        }).join("");
+
+        [...times.querySelectorAll(".time")].forEach(btn=>{
+          btn.addEventListener("click",()=>{
+            [...times.querySelectorAll(".time")].forEach(x=>x.classList.remove("selected"));
+            btn.classList.add("selected");
+            selectedStart=rows[Number(btn.dataset.index)].horario_inicio;
+            confirmReschedule.disabled=false;
+          });
+        });
+      }catch(err){
+        console.error("Horários reagendamento:",err);
+        times.innerHTML="";
+        feedback(rescheduleFeedback,"Não foi possível consultar os horários agora.");
+      }
+    }
+
+    openReschedule.addEventListener("click",()=>{
+      rescheduleCard.hidden=false;
+      const today=todayBrazilISO();
+      newDate.min=today;
+      newDate.max=addDaysISO(today,45);
+      if(!newDate.value) newDate.value=today;
+      loadSlots();
+      rescheduleCard.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+
+    closeReschedule.addEventListener("click",()=>{
+      rescheduleCard.hidden=true;
+      selectedStart="";
+      clearFeedback(rescheduleFeedback);
+    });
+
+    newDate.addEventListener("change",loadSlots);
+
+    confirmReschedule.addEventListener("click",async()=>{
+      if(!selectedStart) return;
+      if(!confirm("Confirmar a troca para este novo horário?")) return;
+
+      confirmReschedule.disabled=true;
+      const old=confirmReschedule.textContent;
+      confirmReschedule.textContent="Reagendando...";
+      clearFeedback(rescheduleFeedback);
+
+      try{
+        const {error}=await db.rpc("reagendar_meu_agendamento_dmax",{
+          p_token:token,
+          p_novo_inicio:selectedStart
+        });
+        if(error) throw error;
+
+        feedback(rescheduleFeedback,"Agendamento reagendado com sucesso!","success");
+        await loadBooking();
+        setTimeout(()=>{rescheduleCard.hidden=true},700);
+      }catch(err){
+        console.error("Reagendar:",err);
+        const msg=String(err?.message||"");
+        feedback(rescheduleFeedback,
+          msg.toLowerCase().includes("dispon")
+            ? "Esse horário acabou de ficar indisponível. Escolha outro."
+            : "Não foi possível reagendar agora. Tente novamente."
+        );
+        await loadSlots();
+      }finally{
+        confirmReschedule.textContent=old;
+        confirmReschedule.disabled=!selectedStart;
+      }
+    });
+
+    cancelBooking.addEventListener("click",async()=>{
+      if(!confirm("Tem certeza que deseja cancelar este agendamento? O horário será liberado para outra pessoa.")) return;
+
+      cancelBooking.disabled=true;
+      const old=cancelBooking.textContent;
+      cancelBooking.textContent="Cancelando...";
+      clearFeedback(mainFeedback);
+
+      try{
+        const {error}=await db.rpc("cancelar_meu_agendamento_dmax",{p_token:token});
+        if(error) throw error;
+        feedback(mainFeedback,"Agendamento cancelado. O horário foi liberado.","success");
+        await loadBooking();
+      }catch(err){
+        console.error("Cancelar:",err);
+        feedback(mainFeedback,"Não foi possível cancelar agora. Tente novamente.");
+      }finally{
+        cancelBooking.textContent=old;
+        cancelBooking.disabled=false;
+      }
+    });
+
+    loadBooking();
+  </script>
+</body>
+</html>
