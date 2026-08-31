@@ -272,6 +272,154 @@
       .modal-actions .btn{flex:1 1 100%}
     }
 
+
+    /* GESTÃO DE HORÁRIOS */
+    .schedule-manager{
+      margin-bottom:16px;
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:var(--radius);
+      overflow:hidden;
+    }
+    .schedule-manager-head{
+      padding:18px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+    .schedule-manager-head h2{margin:0 0 5px;font-size:20px}
+    .schedule-manager-head p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+    .schedule-date-wrap{min-width:220px}
+    .schedule-date-wrap label,
+    .schedule-form label{
+      display:block;
+      margin-bottom:7px;
+      color:#d9d9d9;
+      font-size:11px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.07em;
+    }
+    .schedule-manager-body{padding:16px}
+    .schedule-forms{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .schedule-form{
+      border:1px solid var(--line);
+      background:#0c0c0c;
+      border-radius:17px;
+      padding:16px;
+    }
+    .schedule-form h3{margin:0 0 5px;font-size:16px}
+    .schedule-form > p{margin:0 0 14px;color:var(--muted);font-size:11px;line-height:1.5}
+    .schedule-grid{
+      display:grid;
+      grid-template-columns:1.25fr .75fr .75fr;
+      gap:10px;
+    }
+    .schedule-grid .wide{grid-column:1/-1}
+    .schedule-control{
+      width:100%;
+      min-height:46px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#090909;
+      color:var(--text);
+      padding:0 12px;
+      outline:none;
+      color-scheme:dark;
+    }
+    .schedule-control:focus{
+      border-color:rgba(245,158,11,.72);
+      box-shadow:0 0 0 3px rgba(245,158,11,.07);
+    }
+    .schedule-form-actions{margin-top:12px;display:flex;justify-content:flex-end}
+    .schedule-form-actions .btn{min-height:42px}
+    .exceptions-wrap{
+      margin-top:14px;
+      border-top:1px solid var(--line);
+      padding-top:14px;
+    }
+    .exceptions-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:9px;
+    }
+    .exceptions-title strong{font-size:13px}
+    .exceptions-title span{font-size:11px;color:var(--muted)}
+    .exception-list{display:grid;gap:8px}
+    .exception-item{
+      border:1px solid var(--line);
+      background:#0b0b0b;
+      border-radius:14px;
+      padding:12px;
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:12px;
+      align-items:center;
+    }
+    .exception-badge{
+      min-width:76px;
+      min-height:28px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:0 9px;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .exception-badge.block{
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.24);
+      background:rgba(239,68,68,.07);
+    }
+    .exception-badge.extend{
+      color:#bbf7d0;
+      border:1px solid rgba(37,211,102,.25);
+      background:rgba(37,211,102,.06);
+    }
+    .exception-copy strong{display:block;font-size:13px;margin-bottom:3px}
+    .exception-copy span{display:block;color:var(--muted);font-size:11px;line-height:1.45}
+    .schedule-feedback{
+      margin-top:12px;
+      padding:11px 12px;
+      border-radius:12px;
+      font-size:12px;
+      line-height:1.5;
+    }
+    .schedule-feedback.success{
+      color:#bbf7d0;
+      border:1px solid rgba(37,211,102,.25);
+      background:rgba(37,211,102,.06);
+    }
+    .schedule-feedback.error{
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.26);
+      background:rgba(239,68,68,.07);
+    }
+    @media(max-width:820px){
+      .schedule-forms{grid-template-columns:1fr}
+    }
+    @media(max-width:620px){
+      .schedule-grid{grid-template-columns:1fr 1fr}
+      .schedule-grid .professional-field,
+      .schedule-grid .wide{grid-column:1/-1}
+      .exception-item{grid-template-columns:1fr auto}
+      .exception-badge{grid-column:1/-1;justify-self:start}
+      .schedule-manager-head{align-items:stretch}
+      .schedule-date-wrap{width:100%;min-width:0}
+    }
+
   </style>
 </head>
 
@@ -361,6 +509,103 @@
           Agora o painel também gerencia o status dos atendimentos. Concluir mantém o histórico; cancelar retira o atendimento da agenda ativa.
         </div>
 
+
+        <section class="schedule-manager">
+          <div class="schedule-manager-head">
+            <div>
+              <div class="eyebrow">Gestão de horários</div>
+              <h2>Bloqueios e extensões</h2>
+              <p>Crie exceções para um dia específico sem alterar o expediente semanal do barbeiro.</p>
+            </div>
+            <div class="schedule-date-wrap">
+              <label for="scheduleDate">Data das exceções</label>
+              <input id="scheduleDate" class="schedule-control" type="date">
+            </div>
+          </div>
+
+          <div class="schedule-manager-body">
+            <div class="schedule-forms">
+              <form id="blockForm" class="schedule-form">
+                <h3>Bloquear horário</h3>
+                <p>Use para almoço, compromisso, saída antecipada ou qualquer período indisponível.</p>
+
+                <div class="schedule-grid">
+                  <div class="professional-field">
+                    <label for="blockProfessional">Barbeiro</label>
+                    <select id="blockProfessional" class="schedule-control" required>
+                      <option value="">Carregando...</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label for="blockStart">De</label>
+                    <input id="blockStart" class="schedule-control" type="time" step="300" required>
+                  </div>
+
+                  <div>
+                    <label for="blockEnd">Até</label>
+                    <input id="blockEnd" class="schedule-control" type="time" step="300" required>
+                  </div>
+
+                  <div class="wide">
+                    <label for="blockReason">Motivo (opcional)</label>
+                    <input id="blockReason" class="schedule-control" type="text" maxlength="100" placeholder="Ex.: compromisso">
+                  </div>
+                </div>
+
+                <div class="schedule-form-actions">
+                  <button id="blockSave" class="btn btn-danger" type="submit">Bloquear horário</button>
+                </div>
+              </form>
+
+              <form id="extendForm" class="schedule-form">
+                <h3>Estender expediente</h3>
+                <p>Abra horários extras somente na data escolhida, sem mudar os outros dias da semana.</p>
+
+                <div class="schedule-grid">
+                  <div class="professional-field">
+                    <label for="extendProfessional">Barbeiro</label>
+                    <select id="extendProfessional" class="schedule-control" required>
+                      <option value="">Carregando...</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label for="extendStart">De</label>
+                    <input id="extendStart" class="schedule-control" type="time" step="300" value="19:00" required>
+                  </div>
+
+                  <div>
+                    <label for="extendEnd">Até</label>
+                    <input id="extendEnd" class="schedule-control" type="time" step="300" value="21:00" required>
+                  </div>
+
+                  <div class="wide">
+                    <label for="extendReason">Motivo (opcional)</label>
+                    <input id="extendReason" class="schedule-control" type="text" maxlength="100" placeholder="Ex.: atendimento extra">
+                  </div>
+                </div>
+
+                <div class="schedule-form-actions">
+                  <button id="extendSave" class="btn btn-gold" type="submit">Estender expediente</button>
+                </div>
+              </form>
+            </div>
+
+            <div id="scheduleFeedback" class="schedule-feedback" hidden></div>
+
+            <div class="exceptions-wrap">
+              <div class="exceptions-title">
+                <strong>Exceções desta data</strong>
+                <span id="exceptionsDateLabel"></span>
+              </div>
+              <div id="exceptionsList" class="exception-list">
+                <div class="placeholder">Carregando exceções...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="panel">
           <div class="panel-head">
             <h2>Agenda</h2>
@@ -447,6 +692,23 @@
     const agendaDate = document.getElementById("agendaDate");
     const panelDate = document.getElementById("panelDate");
     const agendaContent = document.getElementById("agendaContent");
+
+    const scheduleDate = document.getElementById("scheduleDate");
+    const blockForm = document.getElementById("blockForm");
+    const blockProfessional = document.getElementById("blockProfessional");
+    const blockStart = document.getElementById("blockStart");
+    const blockEnd = document.getElementById("blockEnd");
+    const blockReason = document.getElementById("blockReason");
+    const blockSave = document.getElementById("blockSave");
+    const extendForm = document.getElementById("extendForm");
+    const extendProfessional = document.getElementById("extendProfessional");
+    const extendStart = document.getElementById("extendStart");
+    const extendEnd = document.getElementById("extendEnd");
+    const extendReason = document.getElementById("extendReason");
+    const extendSave = document.getElementById("extendSave");
+    const scheduleFeedback = document.getElementById("scheduleFeedback");
+    const exceptionsList = document.getElementById("exceptionsList");
+    const exceptionsDateLabel = document.getElementById("exceptionsDateLabel");
 
     const metricCount = document.getElementById("metricCount");
     const metricNext = document.getElementById("metricNext");
@@ -609,7 +871,16 @@
         agendaDate.value = todayBrazilISO();
       }
 
-      await loadAgenda();
+      if (!scheduleDate.value) {
+        scheduleDate.value = agendaDate.value;
+      }
+
+      await Promise.all([
+        loadAgenda(),
+        loadScheduleProfessionals()
+      ]);
+
+      await loadExceptions();
     }
 
     function renderEmpty() {
@@ -731,6 +1002,237 @@
       metricNext.textContent = formatTime(nextRow.inicio);
       metricNextSub.textContent = `${nextRow.cliente_nome} • ${nextRow.barbeiro}`;
     }
+
+
+    function showScheduleFeedback(message, type = "success") {
+      scheduleFeedback.textContent = message;
+      scheduleFeedback.className = `schedule-feedback ${type}`;
+      scheduleFeedback.hidden = false;
+    }
+
+    function clearScheduleFeedback() {
+      scheduleFeedback.hidden = true;
+      scheduleFeedback.textContent = "";
+      scheduleFeedback.className = "schedule-feedback";
+    }
+
+    function brazilTimestamp(date, time) {
+      return `${date}T${time}:00-03:00`;
+    }
+
+    async function loadScheduleProfessionals() {
+      const { data, error } = await dmaxAuth.rpc("catalogo_dmax");
+
+      if (error) {
+        console.error("D'Max Admin profissionais:", error);
+        const fallback = '<option value="">Não foi possível carregar</option>';
+        blockProfessional.innerHTML = fallback;
+        extendProfessional.innerHTML = fallback;
+        return;
+      }
+
+      const professionals = (data?.profissionais || [])
+        .filter(pro => pro?.id && pro?.nome)
+        .sort((a,b) => String(a.nome).localeCompare(String(b.nome), "pt-BR"));
+
+      const options = [
+        '<option value="">Selecione</option>',
+        ...professionals.map(pro =>
+          `<option value="${escapeHTML(pro.id)}">${escapeHTML(pro.nome)}</option>`
+        )
+      ].join("");
+
+      blockProfessional.innerHTML = options;
+      extendProfessional.innerHTML = options;
+    }
+
+    function renderExceptions(rows) {
+      if (!rows.length) {
+        exceptionsList.innerHTML = `
+          <div class="placeholder">
+            <strong>Nenhuma exceção nesta data.</strong>
+            O expediente semanal está valendo normalmente.
+          </div>
+        `;
+        return;
+      }
+
+      exceptionsList.innerHTML = rows.map(row => {
+        const isBlock = String(row.tipo || "").toUpperCase() === "BLOQUEIO";
+        const label = isBlock ? "Bloqueio" : "Extensão";
+        const badgeClass = isBlock ? "block" : "extend";
+        const action = isBlock ? "remove-block" : "remove-extension";
+        const reason = row.motivo ? ` • ${escapeHTML(row.motivo)}` : "";
+
+        return `
+          <div class="exception-item">
+            <span class="exception-badge ${badgeClass}">${label}</span>
+
+            <div class="exception-copy">
+              <strong>${escapeHTML(row.profissional_nome)}</strong>
+              <span>${formatTime(row.inicio)}–${formatTime(row.fim)}${reason}</span>
+            </div>
+
+            <button
+              class="btn btn-dark btn-small"
+              type="button"
+              data-exception-action="${action}"
+              data-exception-id="${escapeHTML(row.id)}"
+            >
+              Remover
+            </button>
+          </div>
+        `;
+      }).join("");
+
+      exceptionsList.querySelectorAll("[data-exception-action]").forEach(button => {
+        button.addEventListener("click", async () => {
+          const isBlock = button.dataset.exceptionAction === "remove-block";
+          const rpcName = isBlock
+            ? "remover_bloqueio_admin"
+            : "remover_extensao_horario_admin";
+          const params = isBlock
+            ? { p_bloqueio_id: button.dataset.exceptionId }
+            : { p_extensao_id: button.dataset.exceptionId };
+
+          if (!confirm(`Remover este ${isBlock ? "bloqueio" : "horário estendido"}?`)) return;
+
+          button.disabled = true;
+
+          try {
+            const { error } = await dmaxAuth.rpc(rpcName, params);
+            if (error) throw error;
+
+            showScheduleFeedback(
+              isBlock ? "Bloqueio removido." : "Extensão removida.",
+              "success"
+            );
+
+            await loadExceptions();
+          } catch (error) {
+            console.error("D'Max Admin remover exceção:", error);
+            showScheduleFeedback("Não foi possível remover esta exceção.", "error");
+          } finally {
+            button.disabled = false;
+          }
+        });
+      });
+    }
+
+    async function loadExceptions() {
+      if (!scheduleDate.value) return;
+
+      exceptionsDateLabel.textContent = formatDate(scheduleDate.value);
+      exceptionsList.innerHTML = '<div class="placeholder">Carregando exceções...</div>';
+
+      try {
+        const { data, error } = await dmaxAuth.rpc("excecoes_horario_admin", {
+          p_data: scheduleDate.value
+        });
+
+        if (error) throw error;
+        renderExceptions(data || []);
+      } catch (error) {
+        console.error("D'Max Admin exceções:", error);
+        exceptionsList.innerHTML = `
+          <div class="placeholder">
+            <strong>Não foi possível carregar as exceções.</strong>
+            Atualize a página e tente novamente.
+          </div>
+        `;
+      }
+    }
+
+    blockForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearScheduleFeedback();
+
+      if (!scheduleDate.value || !blockProfessional.value || !blockStart.value || !blockEnd.value) {
+        showScheduleFeedback("Preencha barbeiro, data, início e fim do bloqueio.", "error");
+        return;
+      }
+
+      if (blockEnd.value <= blockStart.value) {
+        showScheduleFeedback("O horário final do bloqueio precisa ser maior que o inicial.", "error");
+        return;
+      }
+
+      blockSave.disabled = true;
+      const originalText = blockSave.textContent;
+      blockSave.textContent = "Salvando...";
+
+      try {
+        const { error } = await dmaxAuth.rpc("criar_bloqueio_admin", {
+          p_profissional_id: blockProfessional.value,
+          p_inicio: brazilTimestamp(scheduleDate.value, blockStart.value),
+          p_fim: brazilTimestamp(scheduleDate.value, blockEnd.value),
+          p_motivo: blockReason.value.trim() || null
+        });
+
+        if (error) throw error;
+
+        blockStart.value = "";
+        blockEnd.value = "";
+        blockReason.value = "";
+
+        showScheduleFeedback("Horário bloqueado com sucesso.", "success");
+        await loadExceptions();
+      } catch (error) {
+        console.error("D'Max Admin criar bloqueio:", error);
+        showScheduleFeedback(error?.message || "Não foi possível criar o bloqueio.", "error");
+      } finally {
+        blockSave.disabled = false;
+        blockSave.textContent = originalText;
+      }
+    });
+
+    extendForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearScheduleFeedback();
+
+      if (!scheduleDate.value || !extendProfessional.value || !extendStart.value || !extendEnd.value) {
+        showScheduleFeedback("Preencha barbeiro, data, início e fim da extensão.", "error");
+        return;
+      }
+
+      if (extendEnd.value <= extendStart.value) {
+        showScheduleFeedback("O novo horário final precisa ser maior que o início.", "error");
+        return;
+      }
+
+      extendSave.disabled = true;
+      const originalText = extendSave.textContent;
+      extendSave.textContent = "Salvando...";
+
+      try {
+        const { error } = await dmaxAuth.rpc("criar_extensao_horario_admin", {
+          p_profissional_id: extendProfessional.value,
+          p_data: scheduleDate.value,
+          p_inicio: extendStart.value,
+          p_fim: extendEnd.value,
+          p_motivo: extendReason.value.trim() || null
+        });
+
+        if (error) throw error;
+
+        extendReason.value = "";
+
+        showScheduleFeedback("Expediente estendido com sucesso para esta data.", "success");
+        await loadExceptions();
+      } catch (error) {
+        console.error("D'Max Admin criar extensão:", error);
+        showScheduleFeedback(error?.message || "Não foi possível criar a extensão.", "error");
+      } finally {
+        extendSave.disabled = false;
+        extendSave.textContent = originalText;
+      }
+    });
+
+    scheduleDate.addEventListener("change", async () => {
+      clearScheduleFeedback();
+      await loadExceptions();
+    });
+
 
     async function loadAgenda() {
       if (!agendaDate.value) return;
@@ -973,7 +1475,10 @@
       }
     });
 
-    agendaDate.addEventListener("change", loadAgenda);
+    agendaDate.addEventListener("change", async () => {
+      scheduleDate.value = agendaDate.value;
+      await Promise.all([loadAgenda(), loadExceptions()]);
+    });
 
     dmaxAuth.auth.onAuthStateChange(async (event, session) => {
       if (event === "PASSWORD_RECOVERY") {
