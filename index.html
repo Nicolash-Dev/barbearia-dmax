@@ -1083,6 +1083,13 @@
       .booking-times{grid-template-columns:repeat(2,1fr)}
     }
 
+  
+    .developer-credit{color:#777;font-size:12px;transition:.2s ease;white-space:nowrap}
+    .developer-credit strong{color:var(--gold);font-weight:700}
+    .developer-credit:hover{color:#aaa}
+    .developer-credit:hover strong{color:var(--gold2)}
+    @media(max-width:620px){.developer-credit{white-space:normal}}
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -1582,7 +1589,13 @@
     <div>
       <strong class="cinzel" style="color:#eee">D'<span class="gold">MAX</span></strong>
       · Santa Terezinha de Goiás
-    </div>
+    
+    <a href="https://wa.me/5562981848223?text=Ol%C3%A1%20Nicolas%2C%20vi%20seu%20trabalho%20no%20site%20da%20Barbearia%20D%27Max%20e%20gostaria%20de%20conversar."
+       target="_blank" rel="noopener noreferrer" class="developer-credit"
+       aria-label="Falar com Nicolas.Dev pelo WhatsApp">
+      Desenvolvido por <strong>Nicolas.Dev</strong>
+    </a>
+</div>
 
     <div>
       © <span id="year"></span> Barbearia D'Max
