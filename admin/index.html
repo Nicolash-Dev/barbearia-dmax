@@ -842,6 +842,10 @@
 
 
 
+
+    .dev-credit{margin:22px 0 4px;text-align:center;color:var(--muted);font-size:11px}
+    .dev-credit a{color:var(--gold);font-weight:800}
+    .dev-credit a:hover{text-decoration:underline}
   </style>
 
 </head>
@@ -1234,7 +1238,9 @@
 
         </section>
 
-
+        <footer class="dev-credit">
+          Desenvolvido por <a href="https://wa.me/5562981848223" target="_blank" rel="noopener noreferrer">Nicolas.Dev</a>
+        </footer>
 
       </div>
 
@@ -1915,6 +1921,236 @@
       metricNext.textContent = formatTime(nextRow.inicio);
       metricNextSub.textContent = `${nextRow.cliente_nome} • ${nextRow.barbeiro === "Max" ? "Maxwell" : nextRow.barbeiro}`;
     }
+
+    function showScheduleFeedback(message, type = "success") {
+      scheduleFeedback.textContent = message;
+      scheduleFeedback.className = `schedule-feedback ${type}`;
+      scheduleFeedback.hidden = false;
+    }
+
+    function clearScheduleFeedback() {
+      scheduleFeedback.hidden = true;
+      scheduleFeedback.textContent = "";
+      scheduleFeedback.className = "schedule-feedback";
+    }
+
+    function brazilTimestamp(date, time) {
+      return `${date}T${time}:00-03:00`;
+    }
+
+    async function loadScheduleProfessionals() {
+      const { data, error } = await dmaxAuth.rpc("catalogo_dmax");
+
+      if (error) {
+        console.error("D'Max Admin profissionais:", error);
+        const fallback = '<option value="">Não foi possível carregar</option>';
+        blockProfessional.innerHTML = fallback;
+        extendProfessional.innerHTML = fallback;
+        return;
+      }
+
+      const professionals = (data?.profissionais || [])
+        .filter(pro => pro?.id && pro?.nome)
+        .sort((a,b) => String(a.nome).localeCompare(String(b.nome), "pt-BR"));
+
+      const options = [
+        '<option value="">Selecione</option>',
+        ...professionals.map(pro =>
+          `<option value="${escapeHTML(pro.id)}">${escapeHTML(pro.nome)}</option>`
+        )
+      ].join("");
+
+      blockProfessional.innerHTML = options;
+      extendProfessional.innerHTML = options;
+    }
+
+    function renderExceptions(rows) {
+      if (!rows.length) {
+        exceptionsList.innerHTML = `
+          <div class="placeholder">
+            <strong>Nenhuma exceção nesta data.</strong>
+            O expediente semanal está valendo normalmente.
+          </div>
+        `;
+        return;
+      }
+
+      exceptionsList.innerHTML = rows.map(row => {
+        const isBlock = String(row.tipo || "").toUpperCase() === "BLOQUEIO";
+        const label = isBlock ? "Bloqueio" : "Extensão";
+        const badgeClass = isBlock ? "block" : "extend";
+        const action = isBlock ? "remove-block" : "remove-extension";
+        const reason = row.motivo ? ` • ${escapeHTML(row.motivo)}` : "";
+
+        return `
+          <div class="exception-item">
+            <span class="exception-badge ${badgeClass}">${label}</span>
+
+            <div class="exception-copy">
+              <strong>${escapeHTML(row.profissional_nome)}</strong>
+              <span>${formatTime(row.inicio)}–${formatTime(row.fim)}${reason}</span>
+            </div>
+
+            <button
+              class="btn btn-dark btn-small"
+              type="button"
+              data-exception-action="${action}"
+              data-exception-id="${escapeHTML(row.id)}"
+            >
+              Remover
+            </button>
+          </div>
+        `;
+      }).join("");
+
+      exceptionsList.querySelectorAll("[data-exception-action]").forEach(button => {
+        button.addEventListener("click", async () => {
+          const isBlock = button.dataset.exceptionAction === "remove-block";
+          const rpcName = isBlock
+            ? "remover_bloqueio_admin"
+            : "remover_extensao_horario_admin";
+          const params = isBlock
+            ? { p_bloqueio_id: button.dataset.exceptionId }
+            : { p_extensao_id: button.dataset.exceptionId };
+
+          if (!confirm(`Remover este ${isBlock ? "bloqueio" : "horário estendido"}?`)) return;
+
+          button.disabled = true;
+
+          try {
+            const { error } = await dmaxAuth.rpc(rpcName, params);
+            if (error) throw error;
+
+            showScheduleFeedback(
+              isBlock ? "Bloqueio removido." : "Extensão removida.",
+              "success"
+            );
+
+            await loadExceptions();
+          } catch (error) {
+            console.error("D'Max Admin remover exceção:", error);
+            showScheduleFeedback("Não foi possível remover esta exceção.", "error");
+          } finally {
+            button.disabled = false;
+          }
+        });
+      });
+    }
+
+    async function loadExceptions() {
+      if (!scheduleDate.value) return;
+
+      exceptionsDateLabel.textContent = formatDate(scheduleDate.value);
+      exceptionsList.innerHTML = '<div class="placeholder">Carregando exceções...</div>';
+
+      try {
+        const { data, error } = await dmaxAuth.rpc("excecoes_horario_admin", {
+          p_data: scheduleDate.value
+        });
+
+        if (error) throw error;
+        renderExceptions(data || []);
+      } catch (error) {
+        console.error("D'Max Admin exceções:", error);
+        exceptionsList.innerHTML = `
+          <div class="placeholder">
+            <strong>Não foi possível carregar as exceções.</strong>
+            Atualize a página e tente novamente.
+          </div>
+        `;
+      }
+    }
+
+    blockForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearScheduleFeedback();
+
+      if (!scheduleDate.value || !blockProfessional.value || !blockStart.value || !blockEnd.value) {
+        showScheduleFeedback("Preencha barbeiro, data, início e fim do bloqueio.", "error");
+        return;
+      }
+
+      if (blockEnd.value <= blockStart.value) {
+        showScheduleFeedback("O horário final do bloqueio precisa ser maior que o inicial.", "error");
+        return;
+      }
+
+      blockSave.disabled = true;
+      const originalText = blockSave.textContent;
+      blockSave.textContent = "Salvando...";
+
+      try {
+        const { error } = await dmaxAuth.rpc("criar_bloqueio_admin", {
+          p_profissional_id: blockProfessional.value,
+          p_inicio: brazilTimestamp(scheduleDate.value, blockStart.value),
+          p_fim: brazilTimestamp(scheduleDate.value, blockEnd.value),
+          p_motivo: blockReason.value.trim() || null
+        });
+
+        if (error) throw error;
+
+        blockStart.value = "";
+        blockEnd.value = "";
+        blockReason.value = "";
+
+        showScheduleFeedback("Horário bloqueado com sucesso.", "success");
+        await loadExceptions();
+      } catch (error) {
+        console.error("D'Max Admin criar bloqueio:", error);
+        showScheduleFeedback(error?.message || "Não foi possível criar o bloqueio.", "error");
+      } finally {
+        blockSave.disabled = false;
+        blockSave.textContent = originalText;
+      }
+    });
+
+    extendForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearScheduleFeedback();
+
+      if (!scheduleDate.value || !extendProfessional.value || !extendStart.value || !extendEnd.value) {
+        showScheduleFeedback("Preencha barbeiro, data, início e fim da extensão.", "error");
+        return;
+      }
+
+      if (extendEnd.value <= extendStart.value) {
+        showScheduleFeedback("O novo horário final precisa ser maior que o início.", "error");
+        return;
+      }
+
+      extendSave.disabled = true;
+      const originalText = extendSave.textContent;
+      extendSave.textContent = "Salvando...";
+
+      try {
+        const { error } = await dmaxAuth.rpc("criar_extensao_horario_admin", {
+          p_profissional_id: extendProfessional.value,
+          p_data: scheduleDate.value,
+          p_inicio: extendStart.value,
+          p_fim: extendEnd.value,
+          p_motivo: extendReason.value.trim() || null
+        });
+
+        if (error) throw error;
+
+        extendReason.value = "";
+
+        showScheduleFeedback("Expediente estendido com sucesso para esta data.", "success");
+        await loadExceptions();
+      } catch (error) {
+        console.error("D'Max Admin criar extensão:", error);
+        showScheduleFeedback(error?.message || "Não foi possível criar a extensão.", "error");
+      } finally {
+        extendSave.disabled = false;
+        extendSave.textContent = originalText;
+      }
+    });
+
+    scheduleDate.addEventListener("change", async () => {
+      clearScheduleFeedback();
+      await loadExceptions();
+    });
+
 
     async function loadAgenda() {
 
