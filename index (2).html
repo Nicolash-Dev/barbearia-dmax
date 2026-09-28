@@ -1084,11 +1084,31 @@
     }
 
   
-    .developer-credit{color:#777;font-size:12px;transition:.2s ease;white-space:nowrap}
-    .developer-credit strong{color:var(--gold);font-weight:700}
-    .developer-credit:hover{color:#aaa}
-    .developer-credit:hover strong{color:var(--gold2)}
-    @media(max-width:620px){.developer-credit{white-space:normal}}
+    /* ===== D'MAX FIX MOBILE + MULTI-SERVIÇOS ===== */
+    .booking-field-card{min-width:0;overflow:hidden}
+    .booking-date{
+      display:block;
+      width:100%;
+      max-width:100%;
+      min-width:0;
+      box-sizing:border-box;
+      color-scheme:dark;
+    }
+    .booking-date::-webkit-date-and-time-value{
+      text-align:left;
+      min-width:0;
+    }
+    .booking-date::-webkit-datetime-edit{
+      min-width:0;
+      padding:0;
+    }
+    @media(max-width:620px){
+      .booking-date{
+        width:100%;
+        max-width:100%;
+        font-size:16px;
+      }
+    }
 
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1193,7 +1213,7 @@
           <h2 class="title">ESCOLHA QUEM VAI CUIDAR DO <span class="gold">SEU ESTILO.</span></h2>
         </div>
         <div>
-          <p class="muted">Escolha o profissional, um ou mais serviços, a data e um horário realmente disponível. A reserva é feita aqui mesmo no site.</p>
+          <p class="muted">Escolha profissional, serviço, data e um horário realmente disponível. A reserva é feita aqui mesmo no site.</p>
           <div class="booking-status"><span class="status-dot"></span>Agenda D'Max conectada em tempo real</div>
         </div>
       </div>
@@ -1242,7 +1262,7 @@
       <div class="booking-step">
         <div class="booking-step-label"><span class="step-number">4</span>Escolha o horário</div>
         <div id="bookingTimes" class="booking-times">
-          <div class="booking-empty">Escolha barbeiro, um ou mais serviços e data para ver os horários livres.</div>
+          <div class="booking-empty">Escolha barbeiro, serviço e data para ver os horários livres.</div>
         </div>
       </div>
 
@@ -1266,7 +1286,7 @@
       <div class="booking-summary">
         <div>
           <div class="booking-summary-title">Seu agendamento</div>
-          <div id="bookingSummary" class="booking-summary-value">Escolha um barbeiro e um serviço para começar.</div>
+          <div id="bookingSummary" class="booking-summary-value">Escolha um barbeiro e um ou mais serviços para começar.</div>
           <div class="booking-note">O horário só é reservado depois que você tocar em “Confirmar agendamento”.</div>
         </div>
 
@@ -1589,13 +1609,7 @@
     <div>
       <strong class="cinzel" style="color:#eee">D'<span class="gold">MAX</span></strong>
       · Santa Terezinha de Goiás
-    
-    <a href="https://wa.me/5562981848223?text=Ol%C3%A1%20Nicolas%2C%20vi%20seu%20trabalho%20no%20site%20da%20Barbearia%20D%27Max%20e%20gostaria%20de%20conversar."
-       target="_blank" rel="noopener noreferrer" class="developer-credit"
-       aria-label="Falar com Nicolas.Dev pelo WhatsApp">
-      Desenvolvido por <strong>Nicolas.Dev</strong>
-    </a>
-</div>
+    </div>
 
     <div>
       © <span id="year"></span> Barbearia D'Max
@@ -1666,10 +1680,6 @@
   const newBooking = document.getElementById("newBooking");
 
   document.getElementById("year").textContent = new Date().getFullYear();
-
-  function displayProfessionalName(name) {
-    return name === "Max" ? "Maxwell" : name;
-  }
 
   function formatMoney(value) {
     return Number(value).toLocaleString("pt-BR", {
@@ -1742,10 +1752,18 @@
     bookingFeedback.className = "booking-feedback";
   }
 
+  function displayProfessionalName(name) {
+    return String(name || "").trim().toLowerCase() === "max" ? "Maxwell" : name;
+  }
+
   function getSelectedServices() {
     return state.selectedServiceIds
       .map(id => state.servicesById.get(id))
       .filter(Boolean);
+  }
+
+  function getSelectedServiceIds() {
+    return getSelectedServices().map(service => service.id);
   }
 
   function updateSummary() {
@@ -1757,13 +1775,12 @@
     }
 
     if (services.length) {
-      const totalPrice = services.reduce((sum, service) => sum + Number(service.preco || 0), 0);
-      const totalMinutes = services.reduce((sum, service) => sum + Number(service.duracao_minutos || 0), 0);
-      const label = services.length === 1 ? "Serviço" : "Serviços";
+      const total = services.reduce((sum, service) => sum + Number(service.preco || 0), 0);
+      const duration = services.reduce((sum, service) => sum + Number(service.duracao_minutos || 0), 0);
 
-      parts.push(`${label}: ${services.map(service => service.nome).join(" + ")}`);
-      parts.push(formatMoney(totalPrice));
-      parts.push(`${totalMinutes} min`);
+      parts.push(`Serviços: ${services.map(service => service.nome).join(" + ")}`);
+      parts.push(formatMoney(total));
+      parts.push(`${duration} min`);
     }
 
     if (state.selectedDate) {
@@ -1771,11 +1788,13 @@
     }
 
     if (state.selectedSlot) {
-      const slotProfessional = state.selectedSlot.profissional_nome
-        ? displayProfessionalName(state.selectedSlot.profissional_nome)
-        : "";
-
-      parts.push(`${formatTime(state.selectedSlot.horario_inicio)}${slotProfessional ? " • " + slotProfessional : ""}`);
+      parts.push(
+        `${formatTime(state.selectedSlot.horario_inicio)}${
+          state.selectedSlot.profissional_nome
+            ? " • " + displayProfessionalName(state.selectedSlot.profissional_nome)
+            : ""
+        }`
+      );
     }
 
     bookingSummary.textContent = parts.length
@@ -1813,20 +1832,23 @@
 
     [...serviceGrid.querySelectorAll("[data-service-id]")].forEach(btn => {
       btn.addEventListener("click", async () => {
-        const serviceId = btn.dataset.serviceId;
-        const index = state.selectedServiceIds.indexOf(serviceId);
+        const id = btn.dataset.serviceId;
+        const alreadySelected = state.selectedServiceIds.includes(id);
 
-        if (index >= 0) {
-          state.selectedServiceIds.splice(index, 1);
-          btn.classList.remove("selected");
-          btn.setAttribute("aria-pressed", "false");
+        if (alreadySelected) {
+          state.selectedServiceIds = state.selectedServiceIds.filter(item => item !== id);
         } else {
-          state.selectedServiceIds.push(serviceId);
-          btn.classList.add("selected");
-          btn.setAttribute("aria-pressed", "true");
+          state.selectedServiceIds = [...state.selectedServiceIds, id];
         }
 
         resetSlot();
+
+        [...serviceGrid.querySelectorAll("[data-service-id]")].forEach(item => {
+          const selected = state.selectedServiceIds.includes(item.dataset.serviceId);
+          item.classList.toggle("selected", selected);
+          item.setAttribute("aria-pressed", String(selected));
+        });
+
         updateSummary();
         await loadTimesIfReady();
       });
@@ -1871,7 +1893,7 @@
     resetSlot();
 
     if (!slots.length) {
-      bookingTimes.innerHTML = '<div class="booking-empty">Nenhum horário livre para essa escolha. Tente outro dia, outro profissional ou menos serviços.</div>';
+      bookingTimes.innerHTML = '<div class="booking-empty">Nenhum horário livre para essa escolha. Tente outro dia ou outro profissional.</div>';
       updateSummary();
       return;
     }
@@ -1907,13 +1929,11 @@
   }
 
   async function listProfessionalSlots(professional, serviceIds, date) {
-    const multiple = serviceIds.length > 1;
-
-    const rpcName = multiple
+    const rpcName = serviceIds.length > 1
       ? "listar_horarios_disponiveis_multiplos"
       : "listar_horarios_disponiveis";
 
-    const params = multiple
+    const params = serviceIds.length > 1
       ? {
           p_profissional_id: professional.id,
           p_servicos_ids: serviceIds,
@@ -1941,7 +1961,9 @@
     resetSlot();
     updateSummary();
 
-    if (!state.selectedBarberName || !state.selectedServiceIds.length || !state.selectedDate) {
+    const serviceIds = getSelectedServiceIds();
+
+    if (!state.selectedBarberName || !serviceIds.length || !state.selectedDate) {
       bookingTimes.innerHTML = '<div class="booking-empty">Escolha barbeiro, um ou mais serviços e data para ver os horários livres.</div>';
       return;
     }
@@ -1960,7 +1982,7 @@
           .filter(Boolean);
 
         const results = await Promise.all(
-          pros.map(pro => listProfessionalSlots(pro, state.selectedServiceIds, state.selectedDate))
+          pros.map(pro => listProfessionalSlots(pro, serviceIds, state.selectedDate))
         );
 
         const all = results.flat().sort((a, b) => {
@@ -1985,7 +2007,7 @@
 
         slots = await listProfessionalSlots(
           professional,
-          state.selectedServiceIds,
+          serviceIds,
           state.selectedDate
         );
 
@@ -2052,6 +2074,7 @@
     clearFeedback();
 
     const services = getSelectedServices();
+    const serviceIds = getSelectedServiceIds();
     const name = customerName.value.trim();
     const phone = normalizePhone(customerPhone.value);
 
@@ -2086,16 +2109,16 @@
     confirmBooking.innerHTML = '<span>Confirmando...</span>';
 
     try {
-      const multiple = services.length > 1;
+      const isMultiple = serviceIds.length > 1;
 
-      const rpcName = multiple
+      const rpcName = isMultiple
         ? "criar_agendamento_multiplo_cliente_dmax"
         : "criar_agendamento_cliente_dmax";
 
-      const params = multiple
+      const params = isMultiple
         ? {
             p_profissional_id: professionalId,
-            p_servicos_ids: state.selectedServiceIds,
+            p_servicos_ids: serviceIds,
             p_cliente_nome: name,
             p_cliente_telefone: phone,
             p_inicio: state.selectedSlot.horario_inicio,
@@ -2103,7 +2126,7 @@
           }
         : {
             p_profissional_id: professionalId,
-            p_servico_id: state.selectedServiceIds[0],
+            p_servico_id: serviceIds[0],
             p_cliente_nome: name,
             p_cliente_telefone: phone,
             p_inicio: state.selectedSlot.horario_inicio,
@@ -2114,28 +2137,28 @@
 
       if (error) throw error;
 
-      const finalProfessionalRaw =
+      const finalProfessional = displayProfessionalName(
         state.selectedSlot.profissional_nome ||
-        state.selectedBarberName;
+        state.selectedBarberName
+      );
 
-      const finalProfessional = displayProfessionalName(finalProfessionalRaw);
       const timeText = formatTime(state.selectedSlot.horario_inicio);
       const dateText = formatDate(state.selectedDate);
-      const totalMinutes = services.reduce((sum, service) => sum + Number(service.duracao_minutos || 0), 0);
-      const totalPrice = services.reduce((sum, service) => sum + Number(service.preco || 0), 0);
       const servicesText = services.map(service => service.nome).join(" + ");
+      const totalPrice = services.reduce((sum, service) => sum + Number(service.preco || 0), 0);
+      const totalDuration = services.reduce((sum, service) => sum + Number(service.duracao_minutos || 0), 0);
 
       bookingSuccessTitle.textContent = `${name}, seu horário está reservado.`;
       bookingSuccessText.textContent =
-        `${servicesText} com ${finalProfessional}, ${dateText}, às ${timeText}. Duração total: ${totalMinutes} min.`;
+        `${servicesText} com ${finalProfessional}, ${dateText}, às ${timeText}. Duração total: ${totalDuration} min.`;
 
       const whatsappMessage =
         `Olá, D'Max! Meu agendamento pelo site foi confirmado.\n\n` +
         `Nome: ${name}\n` +
         `Barbeiro: ${finalProfessional}\n` +
-        `Serviços: ${services.map(service => service.nome).join(", ")}\n` +
-        `Valor total: ${formatMoney(totalPrice)}\n` +
-        `Duração total: ${totalMinutes} min\n` +
+        `Serviços: ${servicesText}\n` +
+        `Total: ${formatMoney(totalPrice)}\n` +
+        `Duração: ${totalDuration} min\n` +
         `Data: ${dateText}\n` +
         `Horário: ${timeText}`;
 
@@ -2147,16 +2170,10 @@
         throw new Error("Token de gerenciamento não retornado.");
       }
 
-      if (multiple) {
-        // O gerenciador atual trabalha com um agendamento individual.
-        // Evita entregar ao cliente um link incompatível até adaptarmos essa tela.
-        bookingManage.hidden = true;
-        bookingManage.removeAttribute("href");
-      } else {
-        bookingManage.hidden = false;
-        bookingManage.href =
-          `/meu-agendamento/?token=${encodeURIComponent(managementToken)}`;
-      }
+      // O link continua sendo preenchido. A tela "Meu Agendamento"
+      // será adaptada para reconhecer o token do grupo.
+      bookingManage.href =
+        `/meu-agendamento/?token=${encodeURIComponent(managementToken)}`;
 
       bookingSuccess.hidden = false;
       bookingSuccess.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -2205,7 +2222,6 @@
     customerName.value = "";
     customerPhone.value = "";
     bookingSuccess.hidden = true;
-    bookingManage.hidden = false;
     clearFeedback();
 
     bookingTimes.innerHTML =
