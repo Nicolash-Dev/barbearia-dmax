@@ -1090,6 +1090,18 @@
     .developer-credit:hover strong{color:var(--gold2)}
     @media(max-width:620px){.developer-credit{white-space:normal}}
 
+
+    /* Consulta de agendamentos salvos neste dispositivo */
+    .saved-bookings-panel{margin-top:15px;padding:18px;border:1px solid rgba(245,158,11,.28);border-radius:16px;background:#101010;max-width:650px}
+    .saved-bookings-panel[hidden]{display:none}
+    .saved-bookings-panel h3{margin:0 0 7px;font-family:"Cinzel",serif;font-size:18px;color:var(--gold2)}
+    .saved-bookings-panel p{margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.6}
+    .saved-bookings-list{display:grid;gap:9px}
+    .saved-booking-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#171717}
+    .saved-booking-item strong{display:block;font-size:13px}
+    .saved-booking-item span{display:block;margin-top:4px;font-size:11px;color:var(--muted)}
+    .saved-booking-item .btn{min-height:39px;padding:0 12px;font-size:12px;flex-shrink:0}
+    @media(max-width:620px){.saved-booking-item{flex-direction:column;align-items:stretch}.saved-booking-item .btn{width:100%}}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -1162,6 +1174,18 @@
           <i data-lucide="message-circle" width="19"></i>
           WhatsApp
         </a>
+      </div>
+
+      <div style="margin-top:12px">
+        <button type="button" id="showSavedBookings" class="btn btn-dark" aria-expanded="false" aria-controls="savedBookingsPanel">
+          <i data-lucide="calendar-search" width="19"></i>
+          Consultar meu agendamento
+        </button>
+        <div id="savedBookingsPanel" class="saved-bookings-panel" hidden>
+          <h3>Meus agendamentos</h3>
+          <p>Consulte os horários confirmados neste navegador. Para acessar de outro aparelho, utilize o link individual do agendamento.</p>
+          <div id="savedBookingsList" class="saved-bookings-list"></div>
+        </div>
       </div>
 
       <div class="trust-row">
@@ -1688,6 +1712,66 @@
     }
   }
 
+  // Os links de gerenciamento são individuais. Nunca buscar agendamentos apenas por telefone.
+  const BOOKINGS_STORAGE_KEY = "dmax_agendamentos_v1";
+  const showSavedBookings = document.getElementById("showSavedBookings");
+  const savedBookingsPanel = document.getElementById("savedBookingsPanel");
+  const savedBookingsList = document.getElementById("savedBookingsList");
+
+  function getSavedBookings() {
+    try {
+      const records = JSON.parse(localStorage.getItem(BOOKINGS_STORAGE_KEY) || "[]");
+      if (!Array.isArray(records)) return [];
+      return records.filter(item => item && typeof item.token === "string" && /^[a-zA-Z0-9_-]{10,}$/.test(item.token)).slice(0, 20);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function rememberBooking(token, service, professional, date, time) {
+    if (!/^[a-zA-Z0-9_-]{10,}$/.test(token)) return;
+    try {
+      const records = getSavedBookings().filter(item => item.token !== token);
+      records.unshift({ token, service, professional, date, time, savedAt: Date.now() });
+      localStorage.setItem(BOOKINGS_STORAGE_KEY, JSON.stringify(records.slice(0, 20)));
+    } catch (error) {
+      console.warn("Não foi possível salvar o link do agendamento neste navegador.", error);
+    }
+  }
+
+  function renderSavedBookings() {
+    const records = getSavedBookings();
+    savedBookingsList.replaceChildren();
+    if (!records.length) {
+      const message = document.createElement("p");
+      message.textContent = "Nenhum agendamento salvo neste navegador ainda. Após confirmar um novo horário, ele aparecerá aqui. Se você já agendou antes, use o link recebido na confirmação ou fale com a barbearia.";
+      savedBookingsList.appendChild(message);
+      return;
+    }
+    for (const record of records) {
+      const item = document.createElement("div");
+      item.className = "saved-booking-item";
+      const details = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = String(record.service || "Agendamento");
+      const subtitle = document.createElement("span");
+      subtitle.textContent = [record.professional, record.date, record.time ? `às ${record.time}` : ""].filter(Boolean).join(" • ");
+      details.append(title, subtitle);
+      const link = document.createElement("a");
+      link.className = "btn btn-gold";
+      link.textContent = "Ver agendamento";
+      link.href = `/meu-agendamento/?token=${encodeURIComponent(record.token)}`;
+      item.append(details, link);
+      savedBookingsList.appendChild(item);
+    }
+  }
+
+  showSavedBookings.addEventListener("click", () => {
+    savedBookingsPanel.hidden = !savedBookingsPanel.hidden;
+    showSavedBookings.setAttribute("aria-expanded", String(!savedBookingsPanel.hidden));
+    if (!savedBookingsPanel.hidden) renderSavedBookings();
+  });
+
   restoreCustomerDetails();
 
   document.getElementById("year").textContent = new Date().getFullYear();
@@ -2117,6 +2201,7 @@
       bookingManage.href =
         `/meu-agendamento/?token=${encodeURIComponent(managementToken)}`;
 
+      rememberBooking(managementToken, service.nome, finalProfessional, dateText, timeText);
       saveCustomerDetails(name, customerPhone.value.trim());
 
       bookingSuccess.hidden = false;
